@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Liversen.DependencyCop.UsingStatement;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
@@ -26,7 +27,7 @@ namespace Liversen.DependencyCop
             var expected = new DiagnosticResult("DC1001", DiagnosticSeverity.Warning)
                 .WithLocation(1, 1)
                 .WithMessage("Do not use 'UsingNamespaceStatementAnalyzer.Account' in a using statement, use fully-qualified names");
-            var test = new CSharpAnalyzerTest<UsingNamespaceStatementAnalyzer, XUnitVerifier>
+            var test = new CSharpAnalyzerTest<Analyzer, XUnitVerifier>
             {
                 TestState =
                 {
@@ -45,7 +46,7 @@ namespace Liversen.DependencyCop
             var code = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().FullName}Code.cs");
             var expected = new DiagnosticResult("DC1004", DiagnosticSeverity.Warning)
                 .WithMessage("A list of disallowed namespaces must be configured for rule DC1001");
-            var test = new CSharpAnalyzerTest<UsingNamespaceStatementAnalyzer, XUnitVerifier>
+            var test = new CSharpAnalyzerTest<Analyzer, XUnitVerifier>
             {
                 TestState =
                 {

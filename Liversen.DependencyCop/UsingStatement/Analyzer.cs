@@ -6,10 +6,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Liversen.DependencyCop
+namespace Liversen.DependencyCop.UsingStatement
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class UsingNamespaceStatementAnalyzer : DiagnosticAnalyzer
+    public class Analyzer : DiagnosticAnalyzer
     {
         const string DotnetDiagnosticOptionName = "dotnet_diagnostic.DC1001_NamespacePrefixes";
         const string BuildPropertyOptionName = "build_property.DC1001_NamespacePrefixes";

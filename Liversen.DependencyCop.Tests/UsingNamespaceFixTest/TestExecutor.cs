@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Liversen.DependencyCop.UsingStatement;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
@@ -20,16 +21,19 @@ namespace Liversen.DependencyCop.UsingNamespaceFixTest
         [Theory]
         [InlineData("SimpleTest")]
         [InlineData("ArrayTest")]
+        [InlineData("ListTest")]
         [InlineData("GenericTest")]
-        async Task GivenCodeUsingDisallowedNamespace_WhenCodeFix_ThenExpectedResult(string testName)
+        [InlineData("DoubleTest")]
+        [InlineData("SubSpaceTest", ".SubSpace")]
+        async Task GivenCodeUsingDisallowedNamespace_WhenCodeFix_ThenExpectedResult(string testName, string optionalExtraNamespace = null)
         {
             var code = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().Namespace}.{testName}Code.cs");
             var expectedCode = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().Namespace}.{testName}FixedCode.cs");
             var expected = new DiagnosticResult("DC1001", DiagnosticSeverity.Warning)
                 .WithLocation(1, 1)
-                .WithMessage("Do not use 'UsingNamespaceStatementAnalyzer.Account' in a using statement, use fully-qualified names");
+                .WithMessage($"Do not use 'UsingNamespaceStatementAnalyzer.Account{optionalExtraNamespace}' in a using statement, use fully-qualified names");
 
-            CSharpCodeFixTest<UsingNamespaceStatementAnalyzer, UsingNamespaceStatementCodeFixProvider, XUnitVerifier> test = new CSharpCodeFixTest<UsingNamespaceStatementAnalyzer, UsingNamespaceStatementCodeFixProvider, XUnitVerifier>()
+            CSharpCodeFixTest<Analyzer, FixProvider.FixProvider, XUnitVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider.FixProvider, XUnitVerifier>()
             {
                 TestState =
                 {

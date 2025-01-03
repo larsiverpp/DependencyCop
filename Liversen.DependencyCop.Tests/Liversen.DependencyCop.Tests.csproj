@@ -8,19 +8,31 @@
     <Compile Remove="DescendantNamespaceAccessAnalyzerTestCode.cs" />
     <Compile Remove="UsingNamespaceFixTest\ArrayTestCode.cs" />
     <Compile Remove="UsingNamespaceFixTest\ArrayTestFixedCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\DoubleTestCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\DoubleTestFixedCode.cs" />
     <Compile Remove="UsingNamespaceFixTest\GenericTestCode.cs" />
     <Compile Remove="UsingNamespaceFixTest\GenericTestFixedCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\ListTestCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\ListTestFixedCode.cs" />
     <Compile Remove="UsingNamespaceFixTest\SimpleTestCode.cs" />
     <Compile Remove="UsingNamespaceFixTest\SimpleTestFixedCode.cs" />
     <Compile Remove="NamespaceCycleAnalyzerTestCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\SubspaceTestCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\SubSpaceTestFixedCode.cs" />
     <Compile Remove="UsingNamespaceStatementAnalyzerTestCode.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UsingNamespaceFixTest\ListTestCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\ListTestFixedCode.cs" />
     <EmbeddedResource Include="UsingNamespaceFixTest\GenericTestCode.cs" />
     <EmbeddedResource Include="UsingNamespaceFixTest\ArrayTestCode.cs" />
     <EmbeddedResource Include="UsingNamespaceFixTest\GenericTestFixedCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\DoubleTestCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\SubSpaceTestCode.cs" />
     <EmbeddedResource Include="UsingNamespaceFixTest\SimpleTestCode.cs" />
     <EmbeddedResource Include="UsingNamespaceFixTest\ArrayTestFixedCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\DoubleTestFixedCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\SubSpaceTestFixedCode.cs" />
     <EmbeddedResource Include="UsingNamespaceFixTest\SimpleTestFixedCode.cs" />
     <EmbeddedResource Include="DescendantNamespaceAccessAnalyzerTestCode.cs" />
     <EmbeddedResource Include="NamespaceCycleAnalyzerTestCode.cs" />
