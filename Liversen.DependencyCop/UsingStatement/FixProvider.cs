@@ -88,6 +88,7 @@ namespace Liversen.DependencyCop.FixProvider
             var back = new List<TypeDeclaration>();
 
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+
             // The namespace we want to qualify.
             var namespaceName = usingDirective.Name.ToString();
 
