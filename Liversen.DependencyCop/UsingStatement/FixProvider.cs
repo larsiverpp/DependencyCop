@@ -102,7 +102,7 @@ namespace Liversen.DependencyCop.FixProvider
                     continue;
                 }
 
-                var typeDeclarations = namespaceDeclarationSyntax.DescendantNodes().OfType<IdentifierNameSyntax>();
+                var typeDeclarations = namespaceDeclarationSyntax.DescendantNodes().OfType<TypeSyntax>();
 
                 // Filter type declarations that are within the specified namespace
                 foreach (var typeDecl in typeDeclarations)
@@ -123,7 +123,7 @@ namespace Liversen.DependencyCop.FixProvider
         }
 
         // Helper method to find the containing namespace of a given syntax node
-        private string GetContainingNamespace(IdentifierNameSyntax node, SemanticModel semanticModel)
+        private string GetContainingNamespace(TypeSyntax node, SemanticModel semanticModel)
         {
             return semanticModel.GetTypeInfo(node).Type?.NamespaceFullName();
         }

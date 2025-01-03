@@ -4,7 +4,7 @@ namespace Liversen.DependencyCop
 {
     public class TypeDeclaration
     {
-        public TypeDeclaration(string @namespace, IdentifierNameSyntax node)
+        public TypeDeclaration(string @namespace, TypeSyntax node)
         {
             NameSpace = @namespace;
             Node = node;
@@ -12,6 +12,6 @@ namespace Liversen.DependencyCop
 
         public string NameSpace { get; set; }
 
-        public IdentifierNameSyntax Node { get; set; }
+        public TypeSyntax Node { get; set; }
     }
 }
