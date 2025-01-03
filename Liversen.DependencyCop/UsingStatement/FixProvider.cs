@@ -88,6 +88,7 @@ namespace Liversen.DependencyCop.FixProvider
             var back = new List<TypeDeclaration>();
 
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            // The namespace we want to qualify.
             var namespaceName = usingDirective.Name.ToString();
 
             // Find all class declarations in the document
@@ -97,12 +98,13 @@ namespace Liversen.DependencyCop.FixProvider
 #pragma warning disable RS1035
                 var typeOuterNamespace = semanticModel.GetDeclaredSymbol(namespaceDeclarationSyntax).NamespaceFullName().Replace(Environment.NewLine, string.Empty);
 #pragma warning restore RS1035
+
                 if (typeOuterNamespace == namespaceName)
                 {
                     continue;
                 }
 
-                var typeDeclarations = namespaceDeclarationSyntax.DescendantNodes().OfType<TypeSyntax>();
+                var typeDeclarations = namespaceDeclarationSyntax.DescendantNodes().OfType<SimpleNameSyntax>();
 
                 // Filter type declarations that are within the specified namespace
                 foreach (var typeDecl in typeDeclarations)
@@ -125,7 +127,7 @@ namespace Liversen.DependencyCop.FixProvider
         // Helper method to find the containing namespace of a given syntax node
         private string GetContainingNamespace(TypeSyntax node, SemanticModel semanticModel)
         {
-            return semanticModel.GetTypeInfo(node).Type?.NamespaceFullName();
+            return semanticModel.GetTypeInfo(node).Type?.NamespaceFullName() ?? semanticModel.GetTypeInfo(node.Parent).Type?.NamespaceFullName();
         }
 
 #pragma warning disable SA1204

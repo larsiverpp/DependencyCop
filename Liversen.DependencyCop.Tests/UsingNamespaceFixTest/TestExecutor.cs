@@ -25,6 +25,9 @@ namespace Liversen.DependencyCop.UsingNamespaceFixTest
         [InlineData("GenericTest")]
         [InlineData("DoubleTest")]
         [InlineData("SubSpaceTest", ".SubSpace")]
+        [InlineData("MethodReturn")]
+        [InlineData("MethodParameter")]
+        [InlineData("AsyncMethodReturn")]
         async Task GivenCodeUsingDisallowedNamespace_WhenCodeFix_ThenExpectedResult(string testName, string optionalExtraNamespace = null)
         {
             var code = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().Namespace}.{testName}Code.cs");
