@@ -65,7 +65,51 @@ namespace Liversen.DependencyCop
                             .WithLeadingTrivia(identifier.GetLeadingTrivia())
                             .WithTrailingTrivia(identifier.GetTrailingTrivia());
 
-                        editor.ReplaceNode(identifier, qualifiedName);
+                        if (identifier.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
+                        {
+                            if (identifierQualifiedNameSyntax.ToFullString() != qualifiedName.ToFullString())
+                            {
+                                editor.ReplaceNode(identifierQualifiedNameSyntax, qualifiedName);
+                            }
+
+                            // Else do nothing - already fully qualified
+                        }
+                        else
+                        {
+                            editor.ReplaceNode(identifier, qualifiedName);
+                        }
+                    }
+                }
+
+                // Handle generic types
+                var genericIdentifiers = classDecl.Node.DescendantNodes().OfType<GenericNameSyntax>();
+                foreach (var identifier in genericIdentifiers)
+                {
+                    var symbolInfo = semanticModel.GetSymbolInfo(identifier, cancellationToken);
+                    var symbol = symbolInfo.Symbol;
+
+                    if (symbol?.ContainingNamespace != null &&
+                        symbol.ContainingNamespace.ToDisplayString() == namespaceName)
+                    {
+                        var fullNameSpace = symbol.ToDisplayString();
+                        var replace = RemoveCommonNameSpace(fullNameSpace, classDecl.NameSpace);
+                        var qualifiedName = SyntaxFactory.ParseName(replace)
+                            .WithLeadingTrivia(identifier.GetLeadingTrivia())
+                            .WithTrailingTrivia(identifier.GetTrailingTrivia());
+
+                        if (identifier.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
+                        {
+                            if (identifierQualifiedNameSyntax.ToFullString() != qualifiedName.ToFullString())
+                            {
+                                editor.ReplaceNode(identifierQualifiedNameSyntax, qualifiedName);
+                            }
+
+                            // Else do nothing - already fully qualified
+                        }
+                        else
+                        {
+                            editor.ReplaceNode(identifier, qualifiedName);
+                        }
                     }
                 }
             }
@@ -114,7 +158,9 @@ namespace Liversen.DependencyCop
         // Helper method to find the containing namespace of a given syntax node
         private string GetContainingNamespace(BasePropertyDeclarationSyntax node, SemanticModel semanticModel)
         {
-            return semanticModel.GetTypeInfo(node.Type).Type.NamespaceFullName();
+            var nodeType = node.Type is ArrayTypeSyntax arrayType ? arrayType.ElementType : node.Type;
+
+            return semanticModel.GetTypeInfo(nodeType).Type.NamespaceFullName();
         }
 
 #pragma warning disable SA1204

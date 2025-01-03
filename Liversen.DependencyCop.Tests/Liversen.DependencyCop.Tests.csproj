@@ -6,14 +6,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="DescendantNamespaceAccessAnalyzerTestCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\ArrayTestCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\ArrayTestFixedCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\GenericTestCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\GenericTestFixedCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\SimpleTestCode.cs" />
+    <Compile Remove="UsingNamespaceFixTest\SimpleTestFixedCode.cs" />
     <Compile Remove="NamespaceCycleAnalyzerTestCode.cs" />
     <Compile Remove="UsingNamespaceStatementAnalyzerTestCode.cs" />
-    <Compile Remove="UsingNamespaceStatementFixTestCode.cs" />
-    <Compile Remove="UsingNamespaceStatementFixTestExpectedFixedCode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UsingNamespaceStatementFixTestExpectedFixedCode.cs" />
-    <EmbeddedResource Include="UsingNamespaceStatementFixTestCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\GenericTestCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\ArrayTestCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\GenericTestFixedCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\SimpleTestCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\ArrayTestFixedCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceFixTest\SimpleTestFixedCode.cs" />
     <EmbeddedResource Include="DescendantNamespaceAccessAnalyzerTestCode.cs" />
     <EmbeddedResource Include="NamespaceCycleAnalyzerTestCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatementAnalyzerTestCode.cs" />

@@ -11,16 +11,16 @@ namespace UsingNamespaceStatementAnalyzer.Account
         public Id Id { get; set; }
 
         public string Name { get; set; }
-
-        public Transaction.Item[] Transactions { get; set; }
     }
 }
 
 namespace UsingNamespaceStatementAnalyzer.Transaction
 {
-    class Item
+    class Current
     {
         public Account.Id AccountId { get; set; }
+
+        public Account.Item Item { get; set; }
 
         public string Text { get; set; }
     }
