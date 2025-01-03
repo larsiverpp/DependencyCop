@@ -56,7 +56,7 @@ namespace Liversen.DependencyCop
             {
                 try
                 {
-                    await Verify.VerifyAnalyzerAsync(code, expected2);
+                    await Verify.VerifyAnalyzerAsync(code, expected1);
                 }
                 catch (Exception)
                 {
