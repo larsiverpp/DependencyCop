@@ -15,6 +15,8 @@
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\AsyncMethodReturnFixedCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\DoubleTestCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\DoubleTestFixedCode.cs" />
+    <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\ExtensionMethodCode.cs" />
+    <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\ExtensionMethodFixedCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\GenericTestCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\GenericTestFixedCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\ListTestCode.cs" />
@@ -34,7 +36,9 @@
     <EmbeddedResource Include="DescendantNamespaceAccessAnalyzerTestCode.cs" />
     <EmbeddedResource Include="NamespaceCycleAnalyzerTestCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\AnalyzerTestCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\ExtensionMethodCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\ArrayTestCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\ExtensionMethodFixedCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\ArrayTestFixedCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\AsyncMethodReturnCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\AsyncMethodReturnFixedCode.cs" />
