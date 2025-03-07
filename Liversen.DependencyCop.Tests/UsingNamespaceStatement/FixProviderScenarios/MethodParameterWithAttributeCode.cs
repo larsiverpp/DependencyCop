@@ -19,7 +19,7 @@ namespace UsingNamespaceStatementAnalyzer.Transaction
 {
     class Current
     {
-        public void GetAccountId(Id id, out Item item)
+        public void GetAccountId([X] Id id, out Item item)
         {
             item = new Item();
         }
@@ -29,3 +29,5 @@ namespace UsingNamespaceStatementAnalyzer.Transaction
         public string Text { get; set; }
     }
 }
+
+class X : System.Attribute { }

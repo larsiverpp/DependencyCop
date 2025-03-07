@@ -26,8 +26,11 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement.FixProviderScenarios
         [InlineData("SubSpaceTest", ".SubSpace")]
         [InlineData("MethodReturn")]
         [InlineData("MethodParameter")]
+        [InlineData("MethodParameterWithAttribute")]
         [InlineData("AsyncMethodReturn")]
         [InlineData("ExtensionMethod")]
+        [InlineData("ExtensionMethodUsedTwice")]
+        [InlineData("AlreadyFullyQualified")]
         async Task GivenCodeUsingDisallowedNamespace_WhenCodeFix_ThenExpectedResult(string testName, string optionalExtraNamespace = null)
         {
             var code = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().Namespace}.{testName}Code.cs");
