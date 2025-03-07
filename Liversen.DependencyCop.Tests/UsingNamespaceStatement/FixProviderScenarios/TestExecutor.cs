@@ -36,7 +36,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement.FixProviderScenarios
                 .WithLocation(1, 1)
                 .WithMessage($"Do not use 'UsingNamespaceStatementAnalyzer.Account{optionalExtraNamespace}' in a using statement, use fully-qualified names");
 
-            CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier>()
+            CSharpCodeFixTest<Analyzer, FixProvider, DefaultVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, DefaultVerifier>()
             {
                 TestState =
                 {
@@ -54,7 +54,18 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement.FixProviderScenarios
                 },
             };
 
-            await Should.NotThrowAsync(async () => await test.RunAsync());
+            await Should.NotThrowAsync(async () =>
+            {
+                try
+                {
+                    await test.RunAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            });
         }
 
         [Fact]

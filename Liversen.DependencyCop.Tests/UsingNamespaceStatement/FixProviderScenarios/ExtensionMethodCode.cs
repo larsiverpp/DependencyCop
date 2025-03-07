@@ -1,5 +1,4 @@
-﻿using System.Xml.XPath;
-using UsingNamespaceStatementAnalyzer.Account;
+﻿using UsingNamespaceStatementAnalyzer.Account;
 
 namespace UsingNamespaceStatementAnalyzer.Account
 {
@@ -14,7 +13,7 @@ namespace UsingNamespaceStatementAnalyzer.Account
 
         public string Name { get; set; }
     }
-   
+
     static class ItemExtensions
     {
         public static string GetName(this Item item) => item.Name;
