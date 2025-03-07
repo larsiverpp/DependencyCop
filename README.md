@@ -25,3 +25,5 @@ The analyzers can be installed using the NuGet command line or the NuGet Package
 Install using the command line:
 
     Install-Package Liversen.DependencyCop
+
+## 
