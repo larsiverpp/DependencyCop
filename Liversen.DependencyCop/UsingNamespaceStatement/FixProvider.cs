@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Diagnostics;
@@ -79,46 +80,64 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
         private async Task<Document> ApplyFixAsync(UsingDirectiveSyntax usingDirective, Document document, CancellationToken cancellationToken)
         {
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
-            Debug.Assert(usingDirective.Name != null, "The analyzer will not report any using directives where this is null");
-            var namespaceName = usingDirective.Name.ToString();
-
-            var classDeclarations = await FindClassesInNamespaceAsync(namespaceName, document, semanticModel, cancellationToken);
-            foreach (var classDecl in classDeclarations)
+            try
             {
-                var symbolInfo = semanticModel.GetSymbolInfo(classDecl.Node, cancellationToken);
-                var symbol = symbolInfo.Symbol;
+                var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+                var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+                Debug.Assert(usingDirective.Name != null, "The analyzer will not report any using directives where this is null");
+                var namespaceName = usingDirective.Name.ToString();
 
-                if (symbol?.ContainingNamespace != null &&
-                    symbol.ContainingNamespace.ToDisplayString() == namespaceName)
+                var classDeclarations = await FindClassesInNamespaceAsync(namespaceName, document, semanticModel, cancellationToken);
+                foreach (var classDecl in classDeclarations)
                 {
-                    var fullNameSpace = symbol.ToDisplayString();
-                    var replace = RemoveCommonNameSpace(fullNameSpace, classDecl.NameSpace);
-                    NameSyntax qualifiedName = SyntaxFactory.ParseName(replace)
-                        .WithLeadingTrivia(classDecl.Node.GetLeadingTrivia())
-                        .WithTrailingTrivia(classDecl.Node.GetTrailingTrivia());
-
-                    if (classDecl.Node.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
+                    var symbolInfo = semanticModel.GetSymbolInfo(classDecl.Node, cancellationToken);
+                    var symbol = symbolInfo.Symbol;
+                    if (symbol?.ContainingNamespace != null &&
+                        symbol.ContainingNamespace.ToDisplayString() == namespaceName)
                     {
-                        if (identifierQualifiedNameSyntax.ToFullString() != qualifiedName.ToFullString())
+                        var fullNameSpace = symbol.ToDisplayString();
+
+                        // This indicates that it is an extension method.
+                        if (classDecl.Node.Parent is MemberAccessExpressionSyntax)
                         {
-                            editor.ReplaceNode(identifierQualifiedNameSyntax, qualifiedName);
+                            var staticUsing = SyntaxFactory.UsingDirective(SyntaxFactory.Token(SyntaxKind.StaticKeyword), null, SyntaxFactory.ParseName("UsingNamespaceStatementAnalyzer.Account.ItemExtensions"));
+                            editor.InsertBefore(usingDirective, staticUsing);
                         }
+                        else
+                        {
+                            var replace = RemoveCommonNameSpace(fullNameSpace, classDecl.NameSpace);
+                            NameSyntax qualifiedName = SyntaxFactory.ParseName(replace)
+                                .WithLeadingTrivia(classDecl.Node.GetLeadingTrivia())
+                                .WithTrailingTrivia(classDecl.Node.GetTrailingTrivia());
 
-                        // Else do nothing - already qualified enough.
-                    }
-                    else
-                    {
-                        editor.ReplaceNode(classDecl.Node, qualifiedName);
+                            // At least some namespace already present
+                            if (classDecl.Node.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
+                            {
+                                if (identifierQualifiedNameSyntax.ToFullString() != qualifiedName.ToFullString())
+                                {
+                                    editor.ReplaceNode(identifierQualifiedNameSyntax, qualifiedName);
+                                }
+
+                                // Else do nothing - already qualified enough.
+                            }
+                            else
+                            {
+                                editor.ReplaceNode(classDecl.Node, qualifiedName);
+                            }
+                        }
                     }
                 }
+
+                // Remove the using directive.
+                editor.RemoveNode(usingDirective);
+
+                return editor.GetChangedDocument();
             }
-
-            // Remove the using directive.
-            editor.RemoveNode(usingDirective);
-
-            return editor.GetChangedDocument();
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                throw;
+            }
         }
 
         private async Task<IReadOnlyList<TypeDeclaration>> FindClassesInNamespaceAsync(string namespaceName, Document document, SemanticModel semanticModel, CancellationToken cancellationToken)
