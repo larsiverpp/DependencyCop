@@ -13,19 +13,25 @@ namespace UsingNamespaceStatementAnalyzer.Account
 
         public string Name { get; set; }
     }
+
+    static class ItemExtensions
+    {
+        public static string GetName(this Item item) => item.Name;
+    }
 }
 
 namespace UsingNamespaceStatementAnalyzer.Transaction
 {
     class Current
     {
-        public void GetAccountId(Id id, out Item item)
-        {
-            item = new Item();
-        }
+        public Id[] AccountIds { get; set; }
 
         public Account.Item Item { get; set; }
 
         public string Text { get; set; }
+
+        public string GetTheName() => Item.GetName();
+
+        public string GetTheName2() => Item.GetName();
     }
 }

@@ -1,5 +1,4 @@
-﻿using UsingNamespaceStatementAnalyzer.Account;
-
+﻿
 namespace UsingNamespaceStatementAnalyzer.Account
 {
     class Id
@@ -19,10 +18,7 @@ namespace UsingNamespaceStatementAnalyzer.Transaction
 {
     class Current
     {
-        public void GetAccountId(Id id, out Item item)
-        {
-            item = new Item();
-        }
+        public Account.Id AccountId { get; set; }
 
         public Account.Item Item { get; set; }
 
