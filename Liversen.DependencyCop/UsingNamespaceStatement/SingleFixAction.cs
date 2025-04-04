@@ -160,17 +160,8 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 .WithLeadingTrivia(classDecl.Node.GetLeadingTrivia())
                 .WithTrailingTrivia(classDecl.Node.GetTrailingTrivia());
 
-            // At least some namespace already present - maybe even too much.
-            if (classDecl.Node.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
-            {
-                if (identifierQualifiedNameSyntax.ToFullString() != qualifiedName.ToFullString())
-                {
-                    editor.ReplaceNode(identifierQualifiedNameSyntax, qualifiedName);
-                }
-
-                // Else do nothing - already qualified as it should be.
-            }
-            else
+            // If some namespace is already present, we don't need to do anything - since it cannot be utilizing the using Directive.
+            if (!(classDecl.Node.Parent is QualifiedNameSyntax))
             {
                 editor.ReplaceNode(classDecl.Node, qualifiedName);
             }
