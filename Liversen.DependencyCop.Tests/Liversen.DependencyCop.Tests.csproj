@@ -33,6 +33,8 @@
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\MethodReturnFixedCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\SimpleTestCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\SimpleTestFixedCode.cs" />
+    <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\StaticUsingAlreadyExistsCode.cs" />
+    <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\StaticUsingAlreadyExistsFixedCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\SubSpaceTestCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\SubSpaceTestFixedCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\TwoUsingStatementsCode.cs" />
@@ -54,6 +56,8 @@
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\MethodParameterWithAttributeFixedCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\AlreadyFullyQualifiedCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\AlreadyFullyQualifiedFixedCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\StaticUsingAlreadyExistsCode.cs" />
+    <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\StaticUsingAlreadyExistsFixedCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\TwoUsingStatementsCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\TwoUsingStatementsFixedCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\DoubleTestCode.cs" />
