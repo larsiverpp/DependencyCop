@@ -10,7 +10,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
     /// Helper class where we ignore nullable in cases where we know the value is not null, given our context.
     /// Our context is that this is regular C# code (hence not vb and not dynamic code generated code).
     /// </summary>
-    internal static class Csharp
+    static class Csharp
     {
         public static bool IsNormalCsharpCode(Document document)
         {

@@ -12,13 +12,13 @@ using Microsoft.CodeAnalysis.Editing;
 
 namespace Liversen.DependencyCop.UsingNamespaceStatement
 {
-    internal class SingleFixAction
+    class SingleFixAction
     {
-        private readonly SemanticModel semanticModel;
-        private readonly DocumentEditor editor;
-        private readonly string namespaceName;
-        private readonly Document document;
-        private readonly UsingDirectiveSyntax usingDirective;
+        readonly SemanticModel semanticModel;
+        readonly DocumentEditor editor;
+        readonly string namespaceName;
+        readonly Document document;
+        readonly UsingDirectiveSyntax usingDirective;
         readonly HashSet<string> staticUsings = new HashSet<string>();
 
         SingleFixAction(SemanticModel semanticModel, DocumentEditor editor, string namespaceName, Document document, UsingDirectiveSyntax usingDirective)
@@ -42,7 +42,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             return await fixAction.ApplyFix(cancellationToken);
         }
 
-        private static string RemoveCommonNameSpace(string originalNameSpace, string compareNameSpace)
+        static string RemoveCommonNameSpace(string originalNameSpace, string compareNameSpace)
         {
             var common = new StringBuilder();
 
@@ -64,7 +64,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             return originalNameSpace[common.Length..];
         }
 
-        private async Task<Document> ApplyFix(CancellationToken cancellationToken)
+        async Task<Document> ApplyFix(CancellationToken cancellationToken)
         {
             var classDeclarations = await FindNameSpaceUsagesAsync(cancellationToken);
             FixNameSpaceUsages(classDeclarations, cancellationToken);
@@ -74,7 +74,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             return editor.GetChangedDocument();
         }
 
-        private async Task<List<ViolationInformation>> FindNameSpaceUsagesAsync(CancellationToken cancellationToken)
+        async Task<List<ViolationInformation>> FindNameSpaceUsagesAsync(CancellationToken cancellationToken)
         {
             var back = new List<ViolationInformation>();
 
@@ -116,7 +116,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             }
         }
 
-        private void FixNameSpaceUsages(IReadOnlyList<ViolationInformation> classDeclarations, CancellationToken cancellationToken)
+        void FixNameSpaceUsages(IReadOnlyList<ViolationInformation> classDeclarations, CancellationToken cancellationToken)
         {
             foreach (var classDecl in classDeclarations)
             {
@@ -140,7 +140,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             }
         }
 
-        private void QualifyUsageOfType(string fullNameSpace, ViolationInformation classDecl)
+        void QualifyUsageOfType(string fullNameSpace, ViolationInformation classDecl)
         {
             var replace = RemoveCommonNameSpace(fullNameSpace, classDecl.NameSpace);
             NameSyntax qualifiedName = SyntaxFactory.ParseName(replace)
@@ -163,7 +163,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             }
         }
 
-        private void FixForExtensionMethod(ISymbol symbol)
+        void FixForExtensionMethod(ISymbol symbol)
         {
             var staticUsingText = symbol.ContainingType.ToString();
 
