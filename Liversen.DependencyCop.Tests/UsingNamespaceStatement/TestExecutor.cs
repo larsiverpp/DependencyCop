@@ -8,7 +8,7 @@ using Shouldly;
 using Xunit;
 #pragma warning disable CS0618 // Type or member is obsolete
 
-namespace Liversen.DependencyCop.UsingNamespaceStatement.FixProviderScenarios
+namespace Liversen.DependencyCop.UsingNamespaceStatement
 {
     public class TestExecutor
     {
@@ -33,8 +33,8 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement.FixProviderScenarios
         [InlineData("AlreadyFullyQualified")]
         async Task GivenCodeUsingDisallowedNamespace_WhenCodeFix_ThenExpectedResult(string testName, string optionalExtraNamespace = null)
         {
-            var code = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().Namespace}.{testName}Code.cs");
-            var expectedCode = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().Namespace}.{testName}FixedCode.cs");
+            var code = EmbeddedResourceHelpers.GetFixProviderTestData(GetType(), $"{testName}Code");
+            var expectedCode = EmbeddedResourceHelpers.GetFixProviderTestData(GetType(), $"{testName}FixedCode");
             var expected = new DiagnosticResult("DC1001", DiagnosticSeverity.Warning)
                 .WithLocation(1, 1)
                 .WithMessage($"Do not use 'UsingNamespaceStatementAnalyzer.Account{optionalExtraNamespace}' in a using statement, use fully-qualified names");
@@ -74,8 +74,8 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement.FixProviderScenarios
         [Fact]
         async Task GivenCodeUsingTwoDisallowedNamespaces_WhenCodeFix_ThenExpectedResult()
         {
-            var code = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().Namespace}.TwoUsingStatementsCode.cs");
-            var expectedCode = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().Namespace}.TwoUsingStatementsFixedCode.cs");
+            var code = EmbeddedResourceHelpers.GetFixProviderTestData(GetType(), "TwoUsingStatementsCode");
+            var expectedCode = EmbeddedResourceHelpers.GetFixProviderTestData(GetType(), "TwoUsingStatementsFixedCode");
             var expected1 = new DiagnosticResult("DC1001", DiagnosticSeverity.Warning)
                 .WithLocation(1, 1)
                 .WithMessage($"Do not use 'UsingNamespaceStatementAnalyzer.Account' in a using statement, use fully-qualified names");
