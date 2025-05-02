@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Liversen.DependencyCop
+namespace Liversen.DependencyCop.UsingNamespaceStatement
 {
     /// <summary>
     /// Used to store a violating <see cref="TypeSyntax"/> along with the namespace it is declared in (so we can identify the common namespace).

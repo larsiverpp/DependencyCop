@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -31,8 +32,8 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
         public static async Task<Document> ApplyFixAsync(UsingDirectiveSyntax usingDirective, Document document, CancellationToken cancellationToken)
         {
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+            var semanticModel = await Csharp.GetSemanticModelAsync(document, cancellationToken);
+            var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
             Debug.Assert(usingDirective.Name != null, "The analyzer will not report any using directives where this is null");
             var namespaceName = usingDirective.Name.ToString();
 
@@ -78,14 +79,15 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         {
             var back = new List<TypeDeclaration>();
 
-            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            Debug.Assert(root != null, "Should not be null, since it was checked previously");
+            var root = await Csharp.GetSyntaxRootAsync(document, cancellationToken);
 
             // Find all class declarations in the document
             var nameSpaceDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (var namespaceDeclarationSyntax in nameSpaceDeclarations)
             {
-                var typeOuterNamespace = semanticModel.GetDeclaredSymbol(namespaceDeclarationSyntax, cancellationToken).NamespaceFullName();
+                var declaredSymbol = Csharp.GetDeclaredSymbol(semanticModel, namespaceDeclarationSyntax);
+
+                var typeOuterNamespace = declaredSymbol.NamespaceFullName() ?? string.Empty;
 
                 if (typeOuterNamespace == namespaceName)
                 {

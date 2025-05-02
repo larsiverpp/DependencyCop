@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
+using System.ComponentModel.Design.Serialization;
 using System.Composition;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -19,17 +21,13 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
         public override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            // I do not believe this can ever be false, but the documentation is vague. However, the documentation is clear on the following: If SupportsSyntaxTree is true
-            // then GetSyntaxRootAsync will not return null.
-            if (!context.Document.SupportsSyntaxTree)
+            if (!Csharp.IsNormalCsharpCode(context.Document))
             {
                 return;
             }
 
-            var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-            Debug.Assert(root != null, "Should not be null, since SupportsSyntaxTree is true");
+            var root = await Csharp.GetSyntaxRootAsync(context.Document, CancellationToken.None);
 
-            // Iterate the errors found in DC1001.
             foreach (var diagnostic in context.Diagnostics)
             {
                 // We know the error is found in a using directive.
