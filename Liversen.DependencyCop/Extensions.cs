@@ -13,7 +13,13 @@ namespace Liversen.DependencyCop
         public static string? NamespaceFullName(this ITypeSymbol typeSymbol)
         {
             var namespaces = typeSymbol.ContainingNamespace?.ConstituentNamespaces;
-            return namespaces.HasValue ? string.Join(".", namespaces.Value) : null;
+            return namespaces.HasValue ? string.Join(".", namespaces.Value) : string.Empty;
+        }
+
+        // Helper method to find the containing namespace of a given syntax node
+        public static string? GetContainingNamespace(this TypeSyntax node, SemanticModel semanticModel)
+        {
+            return semanticModel.GetSymbolInfo(node).Symbol?.ContainingNamespace.ToString();
         }
     }
 }
