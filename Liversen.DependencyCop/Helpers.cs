@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -37,6 +38,20 @@ namespace Liversen.DependencyCop
                 return null;
             }
             return semanticModel.GetDeclaredSymbol(typeDeclarationSyntaxNode) as ITypeSymbol;
+        }
+
+        public static (string Left, string Right) RemoveCommonNamespacePrefix(string left, string right)
+        {
+            var leftParts = left.Split('.');
+            var rightParts = right.Split('.');
+            for (var i = 0; i < Math.Min(leftParts.Length, rightParts.Length); ++i)
+            {
+                if (leftParts[i] != rightParts[i])
+                {
+                    return (string.Join(".", leftParts.Take(i + 1)), string.Join(".", rightParts.Take(i + 1)));
+                }
+            }
+            return (string.Empty, string.Empty);
         }
     }
 }

@@ -20,6 +20,7 @@
     <Rule Id="CA1040" Action="None" /> <!-- AvoidEmptyInterfaces -->
     <Rule Id="CA1062" Action="None" /> <!-- ValidateArgumentsOfPublicMethods -->
     <Rule Id="CA1308" Action="None" /> <!-- NormalizeStringsToUppercase -->
+    <Rule Id="CA1707" Action="None" /> <!-- Identifiers should not contain underscores -->
     <Rule Id="CA1711" Action="None" /> <!-- Identifiers should not have incorrect suffix -->
     <Rule Id="CA1716" Action="None" /> <!-- IdentifiersShouldNotMatchKeywords -->
     <Rule Id="CA1724" Action="None" /> <!-- TypeNamesShouldNotMatchNamespaces -->
