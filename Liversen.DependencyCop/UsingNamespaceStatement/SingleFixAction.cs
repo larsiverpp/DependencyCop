@@ -69,7 +69,6 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var classDeclarations = await FindNameSpaceUsagesAsync(cancellationToken);
             FixNameSpaceUsages(classDeclarations, cancellationToken);
 
-            // Remove the using directive.
             editor.RemoveNode(usingDirective);
 
             return editor.GetChangedDocument();
@@ -81,7 +80,6 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
             var root = await Csharp.GetSyntaxRootAsync(document, cancellationToken);
 
-            // Find all class declarations in the document
             var nameSpaceDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (var namespaceDeclarationSyntax in nameSpaceDeclarations)
             {
@@ -96,22 +94,26 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
                 var typeDeclarations = namespaceDeclarationSyntax.DescendantNodes().OfType<SimpleNameSyntax>();
 
-                // Filter type declarations that are within the specified namespace
-                foreach (var typeDecl in typeDeclarations)
-                {
-                    var declarationInNamespace = typeOuterNamespace;
-                    if (declarationInNamespace != namespaceName)
-                    {
-                        var containingNamespace = typeDecl.GetContainingNamespace(semanticModel);
-                        if (containingNamespace != null && containingNamespace == namespaceName)
-                        {
-                            back.Add(new ViolationInformation(declarationInNamespace, typeDecl));
-                        }
-                    }
-                }
+                back.AddRange(FilterTypeDeclarationWithinSpecifiedNamespace(typeDeclarations, typeOuterNamespace));
             }
 
             return back;
+        }
+
+        IEnumerable<ViolationInformation> FilterTypeDeclarationWithinSpecifiedNamespace(IEnumerable<SimpleNameSyntax> typeDeclarations, string typeOuterNamespace)
+        {
+            foreach (var typeDecl in typeDeclarations)
+            {
+                var declarationInNamespace = typeOuterNamespace;
+                if (declarationInNamespace != namespaceName)
+                {
+                    var containingNamespace = typeDecl.GetContainingNamespace(semanticModel);
+                    if (containingNamespace != null && containingNamespace == namespaceName)
+                    {
+                        yield return new ViolationInformation(declarationInNamespace, typeDecl);
+                    }
+                }
+            }
         }
 
         private void FixNameSpaceUsages(IReadOnlyList<ViolationInformation> classDeclarations, CancellationToken cancellationToken)
@@ -165,7 +167,11 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         {
             var staticUsingText = symbol.ContainingType.ToString();
 
-            // Only add the static using once.
+            AddStaticUsingAtMostOnce(staticUsingText);
+        }
+
+        void AddStaticUsingAtMostOnce(string staticUsingText)
+        {
             if (staticUsings.Add(staticUsingText))
             {
                 var staticUsing = SyntaxFactory.UsingDirective(SyntaxFactory.Token(SyntaxKind.StaticKeyword), null, SyntaxFactory.ParseName(staticUsingText));
