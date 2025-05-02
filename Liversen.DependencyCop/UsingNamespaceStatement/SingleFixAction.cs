@@ -61,7 +61,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 }
             }
 
-            return originalNameSpace.Substring(common.Length);
+            return originalNameSpace[common.Length..];
         }
 
         private async Task<Document> ApplyFix(CancellationToken cancellationToken)
