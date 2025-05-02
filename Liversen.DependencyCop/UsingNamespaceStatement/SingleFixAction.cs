@@ -75,9 +75,9 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             return editor.GetChangedDocument();
         }
 
-        private async Task<List<TypeDeclaration>> FindNameSpaceUsagesAsync(CancellationToken cancellationToken)
+        private async Task<List<ViolationInformation>> FindNameSpaceUsagesAsync(CancellationToken cancellationToken)
         {
-            var back = new List<TypeDeclaration>();
+            var back = new List<ViolationInformation>();
 
             var root = await Csharp.GetSyntaxRootAsync(document, cancellationToken);
 
@@ -105,7 +105,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                         var containingNamespace = typeDecl.GetContainingNamespace(semanticModel);
                         if (containingNamespace != null && containingNamespace == namespaceName)
                         {
-                            back.Add(new TypeDeclaration(declarationInNamespace, typeDecl));
+                            back.Add(new ViolationInformation(declarationInNamespace, typeDecl));
                         }
                     }
                 }
@@ -114,11 +114,11 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             return back;
         }
 
-        private void FixNameSpaceUsages(IReadOnlyList<TypeDeclaration> classDeclarations, CancellationToken cancellationToken)
+        private void FixNameSpaceUsages(IReadOnlyList<ViolationInformation> classDeclarations, CancellationToken cancellationToken)
         {
             foreach (var classDecl in classDeclarations)
             {
-                var symbolInfo = semanticModel.GetSymbolInfo(classDecl.Node, cancellationToken);
+                var symbolInfo = semanticModel.GetSymbolInfo(classDecl.ViolatingNode, cancellationToken);
                 var symbol = symbolInfo.Symbol;
                 if (symbol?.ContainingNamespace != null &&
                     symbol.ContainingNamespace.ToDisplayString() == namespaceName)
@@ -126,7 +126,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                     var fullNameSpace = symbol.ToDisplayString();
 
                     // This indicates that it is an extension method.
-                    if (classDecl.Node.Parent is MemberAccessExpressionSyntax)
+                    if (classDecl.ViolatingNode.Parent is MemberAccessExpressionSyntax)
                     {
                         FixForExtensionMethod(symbol);
                     }
@@ -138,15 +138,15 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             }
         }
 
-        private void QualifyUsageOfType(string fullNameSpace, TypeDeclaration classDecl)
+        private void QualifyUsageOfType(string fullNameSpace, ViolationInformation classDecl)
         {
             var replace = RemoveCommonNameSpace(fullNameSpace, classDecl.NameSpace);
             NameSyntax qualifiedName = SyntaxFactory.ParseName(replace)
-                .WithLeadingTrivia(classDecl.Node.GetLeadingTrivia())
-                .WithTrailingTrivia(classDecl.Node.GetTrailingTrivia());
+                .WithLeadingTrivia(classDecl.ViolatingNode.GetLeadingTrivia())
+                .WithTrailingTrivia(classDecl.ViolatingNode.GetTrailingTrivia());
 
             // At least some namespace already present - maybe even too much.
-            if (classDecl.Node.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
+            if (classDecl.ViolatingNode.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
             {
                 if (identifierQualifiedNameSyntax.ToFullString() != qualifiedName.ToFullString())
                 {
@@ -157,7 +157,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             }
             else
             {
-                editor.ReplaceNode(classDecl.Node, qualifiedName);
+                editor.ReplaceNode(classDecl.ViolatingNode, qualifiedName);
             }
         }
 
