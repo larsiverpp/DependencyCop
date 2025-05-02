@@ -57,8 +57,6 @@ namespace Liversen.DependencyCop.NamespaceCycle
                 try
                 {
                     await Verify.VerifyAnalyzerAsync(code, expected1);
-
-
                 }
                 catch (Exception)
                 {
