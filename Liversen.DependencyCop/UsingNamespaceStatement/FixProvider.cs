@@ -1,7 +1,5 @@
 ﻿using System.Collections.Immutable;
-using System.ComponentModel.Design.Serialization;
 using System.Composition;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -30,15 +28,16 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
             foreach (var diagnostic in context.Diagnostics)
             {
-                // We know the error is found in a using directive.
-                var usingDirective = (UsingDirectiveSyntax)root.FindNode(diagnostic.Location.SourceSpan);
-
-                context.RegisterCodeFix(
-                    CodeAction.Create(
-                        title: $"Qualify usages and remove this line ('using {usingDirective.Name};').",
-                        createChangedDocument: c => SingleFixAction.ApplyFixAsync(usingDirective, context.Document, c),
-                        equivalenceKey: "QualifyAndRemoveUsing"),
-                    diagnostic);
+                var syntaxNode = root.FindNode(diagnostic.Location.SourceSpan);
+                if (syntaxNode is UsingDirectiveSyntax usingDirective)
+                {
+                    context.RegisterCodeFix(
+                        CodeAction.Create(
+                            title: $"Qualify usages and remove this line ('using {usingDirective.Name};').",
+                            createChangedDocument: c => SingleFixAction.ApplyFixAsync(usingDirective, context.Document, c),
+                            equivalenceKey: "QualifyAndRemoveUsing"),
+                        diagnostic);
+                }
             }
         }
     }
