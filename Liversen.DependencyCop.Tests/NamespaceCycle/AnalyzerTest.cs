@@ -32,15 +32,15 @@ namespace Liversen.DependencyCop.NamespaceCycle
         [Fact]
         async Task GivenCodeWithCycle_WhenAnalyzing_ThenDiagnostics()
         {
-            var code = EmbeddedResourceHelpers.GetFromCallingAssembly($"{GetType().FullName}Code.cs");
+            var code = EmbeddedResourceHelpers.GetAnalyzerTestData(GetType(), "Default");
             var expected1 = Verify.Diagnostic()
-                .WithSpan(14, 28, 14, 32)
+                .WithLocation(14, 28)
                 .WithMessage("Break up namespace cycle 'NamespaceCycleAnalyzer.Transaction->NamespaceCycleAnalyzer.Account->NamespaceCycleAnalyzer.Transaction'");
             var expected2 = Verify.Diagnostic()
-                .WithSpan(22, 24, 22, 26)
+                .WithLocation(22, 24)
                 .WithMessage("Break up namespace cycle 'NamespaceCycleAnalyzer.Account->NamespaceCycleAnalyzer.Transaction->NamespaceCycleAnalyzer.Account'");
 
-            // This is stupid, but it seems the VerifyAnalyzerAsync might give different results when run twice in a row.
+            // This is stupid, but it seems the VerifyAnalyzerAsync might or might not give different results when run twice in a row.
             try
             {
                 try
