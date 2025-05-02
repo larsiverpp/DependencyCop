@@ -4,10 +4,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Liversen.DependencyCop
+namespace Liversen.DependencyCop.DescendantNamespaceAccess
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class DescendantNamespaceAccessAnalyzer : DiagnosticAnalyzer
+    public class Analyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
             "DC1002",

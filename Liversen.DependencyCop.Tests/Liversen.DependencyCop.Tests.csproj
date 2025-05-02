@@ -5,9 +5,9 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="DescendantNamespaceAccessAnalyzerTestCode.cs" />
-    <Compile Remove="NamespaceCycleAnalyzerTestCode.cs" />
-    <Compile Remove="UsingNamespaceStatementAnalyzerTestCode.cs" />
+    <Compile Remove="DescendantNamespaceAccess\AnalyzerTestCode.cs" />
+    <Compile Remove="NamespaceCycle\AnalyzerTestCode.cs" />
+    <Compile Remove="UsingNamespaceStatement\AnalyzerTestCode.cs" />
     <Compile Remove="UsingNamespaceStatement\AnalyzerTestCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\AlreadyFullyQualifiedCode.cs" />
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\AlreadyFullyQualifiedFixedCode.cs" />
@@ -39,8 +39,8 @@
     <Compile Remove="UsingNamespaceStatement\FixProviderScenarios\TwoUsingStatementsFixedCode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DescendantNamespaceAccessAnalyzerTestCode.cs" />
-    <EmbeddedResource Include="NamespaceCycleAnalyzerTestCode.cs" />
+    <EmbeddedResource Include="DescendantNamespaceAccess\AnalyzerTestCode.cs" />
+    <EmbeddedResource Include="NamespaceCycle\AnalyzerTestCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\AnalyzerTestCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\ExtensionMethodUsedTwiceCode.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\FixProviderScenarios\ExtensionMethodCode.cs" />

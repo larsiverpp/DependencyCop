@@ -2,30 +2,30 @@
 using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
-using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Liversen.DependencyCop.NamespaceCycleAnalyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
+using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Liversen.DependencyCop.NamespaceCycle.Analyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
-namespace Liversen.DependencyCop
+namespace Liversen.DependencyCop.NamespaceCycle
 {
-    public class NamespaceCycleAnalyzerTest
+    public class AnalyzerTest
     {
         [Fact]
         static void GivenUnrelatedNamespaces_WhenReducingNamespaces_ThenSame() =>
-            NamespaceCycleAnalyzer.GetReducedNamespaces("Foo", "Bar")
+            Analyzer.GetReducedNamespaces("Foo", "Bar")
                 .ShouldBe(("Foo", "Bar"));
 
         [Fact]
         static void GivenNamespacesWithSameRoot_WhenReducingNamespaces_ThenReduced() =>
-            NamespaceCycleAnalyzer.GetReducedNamespaces("DC.Foo", "DC.Bar")
+            Analyzer.GetReducedNamespaces("DC.Foo", "DC.Bar")
                 .ShouldBe(("DC.Foo", "DC.Bar"));
 
         [Fact]
         static void GivenDeepNamespacesWithCommonRoot_WhenReducingNamespaces_ThenReduced() =>
-            NamespaceCycleAnalyzer.GetReducedNamespaces("DC.Foo.Qwerty", "DC.Bar.Qwerty")
+            Analyzer.GetReducedNamespaces("DC.Foo.Qwerty", "DC.Bar.Qwerty")
                 .ShouldBe(("DC.Foo", "DC.Bar"));
 
         [Fact]
         static void GivenOneNamespaceChildOfAnotherNamespace_WhenReducingNamespaces_ThenEmptyNamespaces() =>
-            NamespaceCycleAnalyzer.GetReducedNamespaces("DC.Foo.Bar", "DC.Foo")
+            Analyzer.GetReducedNamespaces("DC.Foo.Bar", "DC.Foo")
                 .ShouldBe((string.Empty, string.Empty));
 
         // It is non-deterministic which of two different diagnostics is returned.
