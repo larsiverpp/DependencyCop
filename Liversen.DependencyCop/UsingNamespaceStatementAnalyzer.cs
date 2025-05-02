@@ -11,11 +11,12 @@ namespace Liversen.DependencyCop
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class UsingNamespaceStatementAnalyzer : DiagnosticAnalyzer
     {
+        public const string RuleDC1001Id = "DC1001";
         const string DotnetDiagnosticOptionName = "dotnet_diagnostic.DC1001_NamespacePrefixes";
         const string BuildPropertyOptionName = "build_property.DC1001_NamespacePrefixes";
 
         static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            "DC1001",
+            RuleDC1001Id,
             "Using namespace statements must not reference disallowed namespaces",
             "Do not use '{0}' in a using statement, use fully-qualified names",
             "DC.Readability",
