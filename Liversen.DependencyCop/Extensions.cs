@@ -18,9 +18,8 @@ namespace Liversen.DependencyCop
         }
 
         // Helper method to find the containing namespace of a given syntax node
-        public static string GetContainingNamespace(this TypeSyntax node, SemanticModel semanticModel)
+        public static string? GetContainingNamespace(this TypeSyntax node, SemanticModel semanticModel)
         {
-            Debug.Assert(semanticModel != null, nameof(semanticModel) + " != null");
             return semanticModel.GetSymbolInfo(node).Symbol?.ContainingNamespace.ToString();
         }
     }
