@@ -22,7 +22,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             "DC.Readability",
             DiagnosticSeverity.Warning,
             true,
-            helpLinkUri: "https://github.com/larsiver/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1001.md");
+            helpLinkUri: "https://github.com/larsiverpp/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1001.md");
 
         static readonly DiagnosticDescriptor Descriptor2 = new DiagnosticDescriptor(
             "DC1004",
@@ -31,7 +31,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             "DC.Readability",
             DiagnosticSeverity.Warning,
             true,
-            helpLinkUri: "https://github.com/larsiver/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1004.md",
+            helpLinkUri: "https://github.com/larsiverpp/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1004.md",
             customTags: WellKnownDiagnosticTags.CompilationEnd);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor, Descriptor2);
