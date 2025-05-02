@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Shouldly;
 using Xunit;
 using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Liversen.DependencyCop.NamespaceCycle.Analyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
@@ -8,29 +7,9 @@ namespace Liversen.DependencyCop.NamespaceCycle
 {
     public class AnalyzerTest
     {
-        [Fact]
-        static void GivenUnrelatedNamespaces_WhenReducingNamespaces_ThenSame() =>
-            Analyzer.GetReducedNamespaces("Foo", "Bar")
-                .ShouldBe(("Foo", "Bar"));
-
-        [Fact]
-        static void GivenNamespacesWithSameRoot_WhenReducingNamespaces_ThenReduced() =>
-            Analyzer.GetReducedNamespaces("DC.Foo", "DC.Bar")
-                .ShouldBe(("DC.Foo", "DC.Bar"));
-
-        [Fact]
-        static void GivenDeepNamespacesWithCommonRoot_WhenReducingNamespaces_ThenReduced() =>
-            Analyzer.GetReducedNamespaces("DC.Foo.Qwerty", "DC.Bar.Qwerty")
-                .ShouldBe(("DC.Foo", "DC.Bar"));
-
-        [Fact]
-        static void GivenOneNamespaceChildOfAnotherNamespace_WhenReducingNamespaces_ThenEmptyNamespaces() =>
-            Analyzer.GetReducedNamespaces("DC.Foo.Bar", "DC.Foo")
-                .ShouldBe((string.Empty, string.Empty));
-
         // It is non-deterministic which of two different diagnostics is returned.
         [Fact]
-        async Task GivenCodeWithCycle_WhenAnalyzing_ThenDiagnostics()
+        public async Task GivenCodeWithCycle_WhenAnalyzing_ThenDiagnostics()
         {
             var code = EmbeddedResourceHelpers.GetAnalyzerTestData(GetType(), "Default");
             var expected1 = Verify.Diagnostic()

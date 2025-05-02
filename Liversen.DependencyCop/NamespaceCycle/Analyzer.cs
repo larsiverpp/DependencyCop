@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -21,20 +19,6 @@ namespace Liversen.DependencyCop.NamespaceCycle
             helpLinkUri: "https://github.com/larsiverpp/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1003.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
-
-        public static (string SourceNamespaceReduced, string TargetNamespaceReduced) GetReducedNamespaces(string sourceNamespace, string targetNamespace)
-        {
-            var sourceNames = sourceNamespace.Split('.');
-            var targetNames = targetNamespace.Split('.');
-            for (var i = 0; i < Math.Min(sourceNames.Length, targetNames.Length); ++i)
-            {
-                if (sourceNames[i] != targetNames[i])
-                {
-                    return (string.Join(".", sourceNames.Take(i + 1)), string.Join(".", targetNames.Take(i + 1)));
-                }
-            }
-            return (string.Empty, string.Empty);
-        }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("MicrosoftCodeAnalysisCorrectness", "RS1026:Enable concurrent execution", Justification = "Cannot have two simultaneous threads change state at the same time.")]
         public override void Initialize(AnalysisContext context)
@@ -61,7 +45,7 @@ namespace Liversen.DependencyCop.NamespaceCycle
                     var targetNamespace = targetType.NamespaceFullName();
                     if (sourceNamespace != null && targetNamespace != null && sourceNamespace != targetNamespace)
                     {
-                        var (sourceNamespaceReduced, targetNamespaceReduced) = GetReducedNamespaces(sourceNamespace, targetNamespace);
+                        var (sourceNamespaceReduced, targetNamespaceReduced) = Helpers.RemoveCommonNamespacePrefix(sourceNamespace, targetNamespace);
                         var cycle = dag.TryAddVertex(sourceNamespaceReduced, targetNamespaceReduced);
                         if (cycle != null)
                         {
