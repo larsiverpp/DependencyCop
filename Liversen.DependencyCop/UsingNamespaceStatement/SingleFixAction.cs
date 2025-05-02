@@ -34,9 +34,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         {
             var semanticModel = await Csharp.GetSemanticModelAsync(document, cancellationToken);
             var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
-            Debug.Assert(usingDirective.Name != null, "The analyzer will not report any using directives where this is null");
-            var namespaceName = usingDirective.Name.ToString();
-
+            var namespaceName = Csharp.UsingDirectiveName(usingDirective);
             var fixAction = new SingleFixAction(semanticModel, editor, namespaceName, document, usingDirective);
 
             return await fixAction.ApplyFix(cancellationToken);

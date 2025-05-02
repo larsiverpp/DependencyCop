@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,6 +31,12 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         public static INamedTypeSymbol GetDeclaredSymbol(SemanticModel semanticModel, ClassDeclarationSyntax declarationSyntax)
         {
             return semanticModel.GetDeclaredSymbol(declarationSyntax)!;
+        }
+
+        public static string UsingDirectiveName(UsingDirectiveSyntax usingDirective)
+        {
+            // Will only be null if it is an alias, which none of the rules are.
+            return usingDirective.Name!.ToString();
         }
     }
 }
