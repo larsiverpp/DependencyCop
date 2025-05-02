@@ -34,7 +34,7 @@ namespace Liversen.DependencyCop
         /// <param name="target">Target vertex.</param>
         /// <returns>If vertex was added, null is returned, otherwise a list of nodes forming a cycle.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "It is more efficient to return null and efficiency matters here.")]
-        public ImmutableList<string> TryAddVertex(string source, string target)
+        public ImmutableList<string>? TryAddVertex(string source, string target)
         {
             var sourceDependencies = GetDependencies(source);
             if (sourceDependencies.Direct.Contains(target))
