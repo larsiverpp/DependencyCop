@@ -39,6 +39,7 @@
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.Analyzers" RuleNamespace="MicrosoftCodeAnalysisReleaseTracking">
     <Rule Id="RS1038" Action="None" /> <!-- Compiler extensions should be implemented in assemblies with compiler-provided references -->
+    <Rule Id="RS1041" Action="None" /> <!-- Compiler extensions should be implemented in assemblies targeting netstandard2.0 -->
     <Rule Id="RS2008" Action="None" /> <!-- Enable analyzer release tracking for the analyzer project containing rule 'x' -->
   </Rules>
 </RuleSet>

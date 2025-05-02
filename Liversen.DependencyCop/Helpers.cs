@@ -6,7 +6,7 @@ namespace Liversen.DependencyCop
 {
     static class Helpers
     {
-        public static ITypeSymbol DetermineReferredType(SyntaxNodeAnalysisContext context)
+        public static ITypeSymbol? DetermineReferredType(SyntaxNodeAnalysisContext context)
         {
             var node = context.Node;
             var semanticModel = context.SemanticModel;
@@ -27,7 +27,7 @@ namespace Liversen.DependencyCop
             }
         }
 
-        public static ITypeSymbol DetermineEnclosingType(SyntaxNodeAnalysisContext context)
+        public static ITypeSymbol? DetermineEnclosingType(SyntaxNodeAnalysisContext context)
         {
             var node = context.Node;
             var semanticModel = context.SemanticModel;
