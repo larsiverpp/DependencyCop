@@ -17,10 +17,10 @@
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>Roslyn;Analyzers;CodeAnalysis</PackageTags>
-    <PackageProjectUrl>https://github.com/larsiver/DependencyCop</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/larsiverpp/DependencyCop</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)-Beta</PackageVersion>
-    <RepositoryUrl>https://github.com/larsiver/DependencyCop.git </RepositoryUrl>
+    <RepositoryUrl>https://github.com/larsiverpp/DependencyCop.git </RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
   </PropertyGroup>

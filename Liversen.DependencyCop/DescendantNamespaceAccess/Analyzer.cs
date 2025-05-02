@@ -17,7 +17,7 @@ namespace Liversen.DependencyCop.DescendantNamespaceAccess
             "DC.Design",
             DiagnosticSeverity.Warning,
             true,
-            helpLinkUri: "https://github.com/larsiver/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1002.md");
+            helpLinkUri: "https://github.com/larsiverpp/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1002.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 

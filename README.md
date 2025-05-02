@@ -16,7 +16,7 @@ The rules in this repository aim at helping getting those namespace structures r
 
 The severity of individual rules may be configured using [rule set files](https://docs.microsoft.com/en-us/visualstudio/code-quality/using-rule-sets-to-group-code-analysis-rules).
 
-Rule [DC1001](https://github.com/larsiver/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1001.md) requires additional configuration to be enabled, see the documentation for that rule for further info.
+Rule [DC1001](https://github.com/larsiverpp/DependencyCop/blob/main/Liversen.DependencyCop/Documentation/DC1001.md) requires additional configuration to be enabled, see the documentation for that rule for further info.
 
 ## Installation
 
