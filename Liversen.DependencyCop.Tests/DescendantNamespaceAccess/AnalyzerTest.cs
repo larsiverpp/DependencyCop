@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Xunit;
-using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Liversen.DependencyCop.DescendantNamespaceAccessAnalyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
+using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Liversen.DependencyCop.DescendantNamespaceAccess.Analyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
 namespace Liversen.DependencyCop.DescendantNamespaceAccess
 {
