@@ -10,8 +10,9 @@ namespace Liversen.DependencyCop.NamespaceCycle
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class Analyzer : DiagnosticAnalyzer
     {
+        public const string RuleId = "DC1003";
         static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            "DC1003",
+            RuleId,
             "Code must not contain namespace cycles",
             "Break up namespace cycle '{0}'",
             "DC.Design",

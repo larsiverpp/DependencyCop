@@ -28,7 +28,7 @@ namespace Liversen.DependencyCop
         }
 
         /// <summary>
-        /// Tries add a vertex.
+        /// Tries to add a vertex.
         /// </summary>
         /// <param name="source">Source vertex.</param>
         /// <param name="target">Target vertex.</param>
