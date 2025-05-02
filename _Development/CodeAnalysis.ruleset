@@ -38,6 +38,7 @@
     <Rule Id="S3925" Action="None" /> <!-- Update this implementation of 'ISerializable' to conform to the recommended serialization pattern. -->
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.Analyzers" RuleNamespace="MicrosoftCodeAnalysisReleaseTracking">
+    <Rule Id="RS1038" Action="None" /> <!-- Compiler extensions should be implemented in assemblies with compiler-provided references -->
     <Rule Id="RS2008" Action="None" /> <!-- Enable analyzer release tracking for the analyzer project containing rule 'x' -->
   </Rules>
 </RuleSet>
