@@ -16,15 +16,16 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         readonly string namespaceName;
         readonly Document document;
         readonly UsingDirectiveSyntax usingDirective;
-        readonly HashSet<string> staticUsings = new HashSet<string>();
+        readonly StaticUsingsSet staticUsings;
 
-        SingleFixAction(SemanticModel semanticModel, DocumentEditor editor, string namespaceName, Document document, UsingDirectiveSyntax usingDirective)
+        SingleFixAction(SemanticModel semanticModel, DocumentEditor editor, string namespaceName, Document document, UsingDirectiveSyntax usingDirective, StaticUsingsSet staticUsings)
         {
             this.semanticModel = semanticModel;
             this.editor = editor;
             this.namespaceName = namespaceName;
             this.document = document;
             this.usingDirective = usingDirective;
+            this.staticUsings = staticUsings;
         }
 
         public static async Task<Document> ApplyFixAsync(UsingDirectiveSyntax usingDirective, Document document, CancellationToken cancellationToken)
@@ -32,7 +33,9 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var semanticModel = await Csharp.GetSemanticModelAsync(document, cancellationToken);
             var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
             var namespaceName = Csharp.UsingDirectiveName(usingDirective);
-            var fixAction = new SingleFixAction(semanticModel, editor, namespaceName, document, usingDirective);
+            var staticUsings = await StaticUsingsSet.GetExisingStaticUsings(document);
+
+            var fixAction = new SingleFixAction(semanticModel, editor, namespaceName, document, usingDirective, staticUsings);
 
             return await fixAction.ApplyFix(cancellationToken);
         }
@@ -148,9 +151,9 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
         void AddStaticUsingAtMostOnce(string staticUsingText)
         {
-            if (staticUsings.Add(staticUsingText))
+            var staticUsing = SyntaxFactory.UsingDirective(SyntaxFactory.Token(SyntaxKind.StaticKeyword), null, SyntaxFactory.ParseName(staticUsingText));
+            if (staticUsings.Add(staticUsing))
             {
-                var staticUsing = SyntaxFactory.UsingDirective(SyntaxFactory.Token(SyntaxKind.StaticKeyword), null, SyntaxFactory.ParseName(staticUsingText));
                 editor.InsertBefore(usingDirective, staticUsing);
             }
         }
