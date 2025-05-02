@@ -29,7 +29,7 @@ namespace Liversen.DependencyCop.NamespaceCycle
                 .ShouldBe((string.Empty, string.Empty));
 
         // It is non-deterministic which of two different diagnostics is returned.
-        [Fact(Skip = "Test is brittle")]
+        [Fact]
         async Task GivenCodeWithCycle_WhenAnalyzing_ThenDiagnostics()
         {
             var code = EmbeddedResourceHelpers.GetAnalyzerTestData(GetType(), "Default");
