@@ -45,7 +45,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var nameSpace1Parts = originalNameSpace.Split('.');
             var nameSpace2Parts = compareNameSpace.Split('.');
 
-            for (int i = 0; i < nameSpace1Parts.Length; i++)
+            for (var i = 0; i < nameSpace1Parts.Length; i++)
             {
                 if (nameSpace1Parts[i] == nameSpace2Parts[i])
                 {
@@ -139,7 +139,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         void QualifyUsageOfType(string fullNameSpace, ViolationInformation classDecl)
         {
             var replace = RemoveCommonNameSpace(fullNameSpace, classDecl.NameSpace);
-            NameSyntax qualifiedName = SyntaxFactory.ParseName(replace)
+            var qualifiedName = SyntaxFactory.ParseName(replace)
                 .WithLeadingTrivia(classDecl.ViolatingNode.GetLeadingTrivia())
                 .WithTrailingTrivia(classDecl.ViolatingNode.GetTrailingTrivia());
 
