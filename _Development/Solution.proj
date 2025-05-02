@@ -5,7 +5,7 @@
     <SolutionDir>$(MSBuildProjectDirectory)\..</SolutionDir>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ReportGenerator" Version="5.0.3"/>
+    <PackageReference Include="ReportGenerator" Version="5.4.5"/>
   </ItemGroup>
   <Target Name="_Build" DependsOnTargets="_Restore">
     <PropertyGroup>
