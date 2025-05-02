@@ -57,18 +57,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 },
             };
 
-            await Should.NotThrowAsync(async () =>
-            {
-                try
-                {
-                    await test.RunAsync();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-            });
+            await Should.NotThrowAsync(async () => await test.RunAsync());
         }
 
         [Fact]
@@ -78,10 +67,10 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var expectedCode = EmbeddedResourceHelpers.GetFixProviderTestData(GetType(), "TwoUsingStatementsFixedCode");
             var expected1 = new DiagnosticResult("DC1001", DiagnosticSeverity.Warning)
                 .WithLocation(1, 1)
-                .WithMessage($"Do not use 'UsingNamespaceStatementAnalyzer.Account' in a using statement, use fully-qualified names");
+                .WithMessage("Do not use 'UsingNamespaceStatementAnalyzer.Account' in a using statement, use fully-qualified names");
             var expected2 = new DiagnosticResult("DC1001", DiagnosticSeverity.Warning)
                 .WithLocation(2, 1)
-                .WithMessage($"Do not use 'UsingNamespaceStatementAnalyzer.Customer' in a using statement, use fully-qualified names");
+                .WithMessage("Do not use 'UsingNamespaceStatementAnalyzer.Customer' in a using statement, use fully-qualified names");
 
             CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier>()
             {
