@@ -9,8 +9,9 @@ namespace Liversen.DependencyCop.DescendantNamespaceAccess
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class Analyzer : DiagnosticAnalyzer
     {
+        public const string RuleId = "DC1002";
         static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            "DC1002",
+            RuleId,
             "Code must not refer code in descendant namespaces",
             "Do not use type '{0}' from descendant namespace '{1}'",
             "DC.Design",
