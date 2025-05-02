@@ -27,7 +27,7 @@ namespace Liversen.DependencyCop
             context.RegisterSyntaxNodeAction(AnalyseTypeUsage, SyntaxKind.IdentifierName, SyntaxKind.GenericName, SyntaxKind.DefaultLiteralExpression);
         }
 
-        void AnalyseTypeUsage(SyntaxNodeAnalysisContext context)
+        static void AnalyseTypeUsage(SyntaxNodeAnalysisContext context)
         {
             var type = Helpers.DetermineReferredType(context);
             var enclosingType = Helpers.DetermineEnclosingType(context);

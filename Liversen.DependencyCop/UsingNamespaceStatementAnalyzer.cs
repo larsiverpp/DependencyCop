@@ -58,7 +58,7 @@ namespace Liversen.DependencyCop
             return null;
         }
 
-        void CompilationStart(CompilationStartAnalysisContext startContext)
+        static void CompilationStart(CompilationStartAnalysisContext startContext)
         {
             var disallowedNamespacePrefixesValue = GetDisallowedNamespacePrefixesValue(startContext.Options);
             var disallowedNamespacePrefixes = (disallowedNamespacePrefixesValue?.Trim() ?? string.Empty)
@@ -73,7 +73,7 @@ namespace Liversen.DependencyCop
             }
         }
 
-        void AnalyseUsingStatement(SyntaxNodeAnalysisContext context, ImmutableArray<string> disallowedNamespacePrefixes)
+        static void AnalyseUsingStatement(SyntaxNodeAnalysisContext context, ImmutableArray<string> disallowedNamespacePrefixes)
         {
             if (context.Node is UsingDirectiveSyntax node && string.IsNullOrEmpty(node.StaticKeyword.Text) && node.Name != null)
             {
