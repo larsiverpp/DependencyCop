@@ -4,9 +4,9 @@ using Shouldly;
 using Xunit;
 using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Liversen.DependencyCop.NamespaceCycleAnalyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
-namespace Liversen.DependencyCop
+namespace Liversen.DependencyCop.NamespaceCycle
 {
-    public class NamespaceCycleAnalyzerTest
+    public class AnalyzerTest
     {
         [Fact]
         static void GivenUnrelatedNamespaces_WhenReducingNamespaces_ThenSame() =>

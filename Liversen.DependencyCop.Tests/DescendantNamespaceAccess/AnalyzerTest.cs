@@ -2,9 +2,9 @@
 using Xunit;
 using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Liversen.DependencyCop.DescendantNamespaceAccessAnalyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
-namespace Liversen.DependencyCop
+namespace Liversen.DependencyCop.DescendantNamespaceAccess
 {
-    public class DescendantNamespaceAccessAnalyzerTest
+    public class AnalyzerTest
     {
         [Fact]
         async Task GivenCodeReferringCodeInDescendantNamespace_WhenAnalyzing_ThenDiagnostics()
