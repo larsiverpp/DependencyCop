@@ -29,8 +29,18 @@ namespace Liversen.DependencyCop
         public static DottedName Create(IEnumerable<string> parts) =>
             new DottedName(string.Join('.', parts));
 
-        public override string ToString() =>
-            Value;
+        public static (DottedName Value1, DottedName Value2)? TakeIncludingFirstDifferingPart(DottedName value1, DottedName value2)
+        {
+            for (var i = 0; i < Math.Min(value1.Parts.Length, value2.Parts.Length); ++i)
+            {
+                if (value1.Parts[i] != value2.Parts[i])
+                {
+                    return (value1.Take(i + 1), value2.Take(i + 1));
+                }
+            }
+
+            return null;
+        }
 
         public DottedName? SkipCommonPrefix(DottedName other)
         {
@@ -44,6 +54,15 @@ namespace Liversen.DependencyCop
 
             return null;
         }
+
+        public DottedName Skip(int count) =>
+            Create(Parts.Skip(count));
+
+        public DottedName Take(int count) =>
+            Create(Parts.Take(count));
+
+        public override string ToString() =>
+            Value;
 
         public override bool Equals(object? obj)
         {
@@ -69,12 +88,6 @@ namespace Liversen.DependencyCop
         {
             return Value.GetHashCode();
         }
-
-        public DottedName Skip(int count) =>
-            Create(Parts.Skip(count));
-
-        public DottedName Take(int count) =>
-            Create(Parts.Take(count));
 
         bool Equals(DottedName other)
         {
