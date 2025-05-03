@@ -38,28 +38,6 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             return await fixAction.ApplyFix(cancellationToken);
         }
 
-        static string RemoveCommonNameSpace(string originalNameSpace, string compareNameSpace)
-        {
-            var common = new StringBuilder();
-
-            var nameSpace1Parts = originalNameSpace.Split('.');
-            var nameSpace2Parts = compareNameSpace.Split('.');
-
-            for (var i = 0; i < nameSpace1Parts.Length; i++)
-            {
-                if (nameSpace1Parts[i] == nameSpace2Parts[i])
-                {
-                    common.Append(nameSpace1Parts[i] + ".");
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return originalNameSpace[common.Length..];
-        }
-
         async Task<Document> ApplyFix(CancellationToken cancellationToken)
         {
             var classDeclarations = await FindNameSpaceUsagesAsync(cancellationToken);
@@ -138,24 +116,27 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
         void QualifyUsageOfType(string fullNameSpace, ViolationInformation classDecl)
         {
-            var replace = RemoveCommonNameSpace(fullNameSpace, classDecl.NameSpace);
-            var qualifiedName = SyntaxFactory.ParseName(replace)
-                .WithLeadingTrivia(classDecl.ViolatingNode.GetLeadingTrivia())
-                .WithTrailingTrivia(classDecl.ViolatingNode.GetTrailingTrivia());
-
-            // At least some namespace already present - maybe even too much.
-            if (classDecl.ViolatingNode.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
+            var replace = new DottedName(fullNameSpace).SkipCommonPrefix(new DottedName(classDecl.NameSpace));
+            if (replace != null)
             {
-                if (identifierQualifiedNameSyntax.ToFullString() != qualifiedName.ToFullString())
+                var qualifiedName = SyntaxFactory.ParseName(replace.Value)
+                    .WithLeadingTrivia(classDecl.ViolatingNode.GetLeadingTrivia())
+                    .WithTrailingTrivia(classDecl.ViolatingNode.GetTrailingTrivia());
+
+                // At least some namespace already present - maybe even too much.
+                if (classDecl.ViolatingNode.Parent is QualifiedNameSyntax identifierQualifiedNameSyntax)
                 {
-                    editor.ReplaceNode(identifierQualifiedNameSyntax, qualifiedName);
-                }
+                    if (identifierQualifiedNameSyntax.ToFullString() != qualifiedName.ToFullString())
+                    {
+                        editor.ReplaceNode(identifierQualifiedNameSyntax, qualifiedName);
+                    }
 
-                // Else do nothing - already qualified as it should be.
-            }
-            else
-            {
-                editor.ReplaceNode(classDecl.ViolatingNode, qualifiedName);
+                    // Else do nothing - already qualified as it should be.
+                }
+                else
+                {
+                    editor.ReplaceNode(classDecl.ViolatingNode, qualifiedName);
+                }
             }
         }
 
