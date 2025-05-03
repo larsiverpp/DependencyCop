@@ -43,13 +43,17 @@ namespace Liversen.DependencyCop.NamespaceCycle
                 {
                     var sourceNamespace = sourceType.NamespaceFullName();
                     var targetNamespace = targetType.NamespaceFullName();
-                    if (sourceNamespace != null && targetNamespace != null && sourceNamespace != targetNamespace)
+                    if (sourceNamespace != null && targetNamespace != null)
                     {
-                        var (sourceNamespaceReduced, targetNamespaceReduced) = Helpers.RemoveCommonNamespacePrefix(sourceNamespace, targetNamespace);
-                        var cycle = dag.TryAddVertex(sourceNamespaceReduced, targetNamespaceReduced);
-                        if (cycle != null)
+                        var dependency = DottedName.TakeIncludingFirstDifferingPart(new DottedName(sourceNamespace), new DottedName(targetNamespace));
+                        if (dependency != null)
                         {
-                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), string.Join("->", cycle)));
+                            var (source, target) = dependency.Value;
+                            var cycle = dag.TryAddVertex(source.Value, target.Value);
+                            if (cycle != null)
+                            {
+                                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), string.Join("->", cycle)));
+                            }
                         }
                     }
                 }

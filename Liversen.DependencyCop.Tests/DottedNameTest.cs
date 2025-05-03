@@ -46,5 +46,35 @@ namespace Liversen.DependencyCop
         [Fact]
         public static void GivenDottedNamesWithNoCommonPrefix_WhenSkippingCommonPrefix_ThenNothingSkipped() =>
             SomeValue.SkipCommonPrefix(new($"A{SomeValue.Value}")).ShouldBe(SomeValue);
+
+        [Fact]
+        public static void GivenDottedNamesWithSinglePart_WhenTakingIncludingFirstDifferingPart_ThenSame() =>
+            DottedName.TakeIncludingFirstDifferingPart(new("Foo"), new("Bar"))
+                .ShouldBe((new("Foo"), new("Bar")));
+
+        [Fact]
+        public static void GivenDottedNamesWithLastPartDiffering_WhenTakingIncludingFirstDifferingPart_ThenSame() =>
+            DottedName.TakeIncludingFirstDifferingPart(new("Foo.Bar"), new("Foo.Bar2"))
+                .ShouldBe((new("Foo.Bar"), new("Foo.Bar2")));
+
+        [Fact]
+        public static void GivenDottedNamesWithNonLastPartDiffering_WhenTakingIncludingFirstDifferingPart_ThenReduced() =>
+            DottedName.TakeIncludingFirstDifferingPart(new("Foo.Bar.Zoo"), new("Foo.Bar2.Zoo"))
+                .ShouldBe((new("Foo.Bar"), new("Foo.Bar2")));
+
+        [Fact]
+        public static void GivenIdenticalDottedNames_WhenTakingIncludingFirstDifferingPart_ThenNull() =>
+            DottedName.TakeIncludingFirstDifferingPart(new("Foo.Bar.Zoo"), new("Foo.Bar.Zoo"))
+                .ShouldBeNull();
+
+        [Fact]
+        public static void GivenDottedNamesWithFirstBeingDescendantOfSecond_WhenTakingIncludingFirstDifferingPart_ThenNull() =>
+            DottedName.TakeIncludingFirstDifferingPart(new("Foo.Bar.Zoo"), new("Foo.Bar"))
+                .ShouldBeNull();
+
+        [Fact]
+        public static void GivenDottedNamesWithSecondBeingDescendantOfFirst_WhenTakingIncludingFirstDifferingPart_ThenNull() =>
+            DottedName.TakeIncludingFirstDifferingPart(new("Foo.Bar"), new("Foo.Bar.Zoo"))
+                .ShouldBeNull();
     }
 }
