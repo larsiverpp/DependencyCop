@@ -7,8 +7,8 @@ namespace Liversen.DependencyCop
 {
     static class Helpers
     {
-        public static DottedName NamespaceFullName(ITypeSymbol typeSymbol) =>
-            DottedName.Create(typeSymbol.ContainingNamespace.ConstituentNamespaces.Select(x => x.ToString()));
+        public static DottedName ContainingNamespace(ISymbol typeSymbol) =>
+            new DottedName(typeSymbol.ContainingNamespace.ToString());
 
         public static ITypeSymbol? DetermineReferredType(SyntaxNodeAnalysisContext context)
         {
