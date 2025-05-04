@@ -41,6 +41,7 @@ namespace Liversen.DependencyCop
             {
                 return null;
             }
+
             var targetDependencies = GetDependencies(target);
             if (targetDependencies.Transitive.Contains(source))
             {
@@ -51,16 +52,19 @@ namespace Liversen.DependencyCop
                     list = list.Add(current);
                     current = nodes[current].Direct.First(x => x == source || nodes[x].Transitive.Contains(source));
                 }
+
                 list = list.Add(source);
                 list = list.Add(target);
                 return list;
             }
+
             sourceDependencies.Direct.Add(target);
             foreach (var dependencies in nodes.Where(x => x.Key == source || (x.Key != target && x.Value.Transitive.Contains(source))).Select(x => x.Value.Transitive))
             {
                 dependencies.Add(target);
                 dependencies.UnionWith(targetDependencies.Transitive);
             }
+
             return null;
         }
 
@@ -70,6 +74,7 @@ namespace Liversen.DependencyCop
             {
                 return existingTargets;
             }
+
             var targets = new Dependencies();
             nodes.Add(node, targets);
             return targets;
