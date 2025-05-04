@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Liversen.DependencyCop
 {
-    public sealed class DottedName
+    public sealed class DottedName : Equatable<DottedName>
     {
         public DottedName(string value)
         {
@@ -45,6 +45,9 @@ namespace Liversen.DependencyCop
         public bool IsDescendantOf(DottedName other) =>
             Value.StartsWith($"{other.Value}.", StringComparison.Ordinal);
 
+        public bool IsEqualToOrDescendantOf(DottedName other) =>
+            this == other || IsDescendantOf(other);
+
         public DottedName? SkipCommonPrefix(DottedName other)
         {
             for (var i = 0; i < Parts.Length; ++i)
@@ -67,34 +70,10 @@ namespace Liversen.DependencyCop
         public override string ToString() =>
             Value;
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is null)
-            {
-                return false;
-            }
+        protected override int GetHashCodeInner() =>
+            Value.GetHashCode();
 
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((DottedName)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
-        bool Equals(DottedName other)
-        {
-            return Value == other.Value;
-        }
+        protected override bool EqualsInner(DottedName other) =>
+            Value == other.Value;
     }
 }
