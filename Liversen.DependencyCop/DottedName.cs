@@ -42,6 +42,9 @@ namespace Liversen.DependencyCop
             return null;
         }
 
+        public bool IsDescendantOf(DottedName other) =>
+            Value.StartsWith($"{other.Value}.", StringComparison.Ordinal);
+
         public DottedName? SkipCommonPrefix(DottedName other)
         {
             for (var i = 0; i < Parts.Length; ++i)

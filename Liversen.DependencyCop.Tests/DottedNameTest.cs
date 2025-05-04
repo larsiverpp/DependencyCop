@@ -36,6 +36,18 @@ namespace Liversen.DependencyCop
             SomeValue.Take(2).ShouldBe(DottedName.Create(SomeParts.Take(2)));
 
         [Fact]
+        public static void GivenIdenticalDottedNames_WhenIsDescendantOf_ThenFalse() =>
+            SomeValue.IsDescendantOf(SomeValue).ShouldBeFalse();
+
+        [Fact]
+        public static void GivenDottedNameDescendantOfOtherDottedName_WhenIsDescendantOf_ThenTrue() =>
+            DottedName.Create(SomeParts.Add("Zoo2")).IsDescendantOf(SomeValue).ShouldBeTrue();
+
+        [Fact]
+        public static void GivenDottedNameNotDescendantOfOtherDottedName_WhenIsDescendantOf_ThenFalse() =>
+            SomeValue.IsDescendantOf(DottedName.Create(SomeParts.Add("Zoo2"))).ShouldBeFalse();
+
+        [Fact]
         public static void GivenIdenticalDottedNames_WhenSkippingCommonPrefix_ThenNull() =>
             SomeValue.SkipCommonPrefix(SomeValue).ShouldBeNull();
 

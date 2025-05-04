@@ -43,7 +43,7 @@ namespace Liversen.DependencyCop.NamespaceCycle
                 {
                     var sourceNamespace = Helpers.NamespaceFullName(sourceType);
                     var targetNamespace = Helpers.NamespaceFullName(targetType);
-                    var dependency = DottedName.TakeIncludingFirstDifferingPart(new DottedName(sourceNamespace), new DottedName(targetNamespace));
+                    var dependency = DottedName.TakeIncludingFirstDifferingPart(sourceNamespace, targetNamespace);
                     if (dependency != null)
                     {
                         var (source, target) = dependency.Value;
