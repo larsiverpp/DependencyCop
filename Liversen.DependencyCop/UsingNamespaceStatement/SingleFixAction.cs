@@ -58,7 +58,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             {
                 var declaredSymbol = Csharp.GetDeclaredSymbol(semanticModel, namespaceDeclarationSyntax);
 
-                var typeOuterNamespace = Helpers.NamespaceFullName(declaredSymbol);
+                var typeOuterNamespace = Helpers.NamespaceFullName(declaredSymbol).Value;
 
                 if (typeOuterNamespace == namespaceName)
                 {

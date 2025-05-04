@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -35,10 +34,10 @@ namespace Liversen.DependencyCop.DescendantNamespaceAccess
             if (type != null && enclosingType != null)
             {
                 var typeNamespace = Helpers.NamespaceFullName(type);
-                var enclosingNamespace = Helpers.NamespaceFullName(enclosingType);
-                if (typeNamespace.StartsWith($"{enclosingNamespace}.", StringComparison.Ordinal))
+                var enclosingTypeNamespace = Helpers.NamespaceFullName(enclosingType);
+                if (typeNamespace.IsDescendantOf(enclosingTypeNamespace))
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), type.Name, typeNamespace));
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), type.Name, typeNamespace.Value));
                 }
             }
         }
