@@ -41,19 +41,16 @@ namespace Liversen.DependencyCop.NamespaceCycle
                 var targetType = Helpers.DetermineReferredType(context);
                 if (sourceType != null && targetType != null && SameAssembly(sourceType, targetType))
                 {
-                    var sourceNamespace = sourceType.NamespaceFullName();
-                    var targetNamespace = targetType.NamespaceFullName();
-                    if (sourceNamespace != null && targetNamespace != null)
+                    var sourceNamespace = Helpers.NamespaceFullName(sourceType);
+                    var targetNamespace = Helpers.NamespaceFullName(targetType);
+                    var dependency = DottedName.TakeIncludingFirstDifferingPart(new DottedName(sourceNamespace), new DottedName(targetNamespace));
+                    if (dependency != null)
                     {
-                        var dependency = DottedName.TakeIncludingFirstDifferingPart(new DottedName(sourceNamespace), new DottedName(targetNamespace));
-                        if (dependency != null)
+                        var (source, target) = dependency.Value;
+                        var cycle = dag.TryAddVertex(source.Value, target.Value);
+                        if (cycle != null)
                         {
-                            var (source, target) = dependency.Value;
-                            var cycle = dag.TryAddVertex(source.Value, target.Value);
-                            if (cycle != null)
-                            {
-                                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), string.Join("->", cycle)));
-                            }
+                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), string.Join("->", cycle)));
                         }
                     }
                 }

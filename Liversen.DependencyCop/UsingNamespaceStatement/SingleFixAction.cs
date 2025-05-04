@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -59,7 +58,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             {
                 var declaredSymbol = Csharp.GetDeclaredSymbol(semanticModel, namespaceDeclarationSyntax);
 
-                var typeOuterNamespace = declaredSymbol.NamespaceFullName() ?? string.Empty;
+                var typeOuterNamespace = Helpers.NamespaceFullName(declaredSymbol);
 
                 if (typeOuterNamespace == namespaceName)
                 {
@@ -81,7 +80,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 var declarationInNamespace = typeOuterNamespace;
                 if (declarationInNamespace != namespaceName)
                 {
-                    var containingNamespace = typeDecl.GetContainingNamespace(semanticModel);
+                    var containingNamespace = semanticModel.GetSymbolInfo(typeDecl).Symbol?.ContainingNamespace.ToString();
                     if (containingNamespace != null && containingNamespace == namespaceName)
                     {
                         yield return new ViolationInformation(declarationInNamespace, typeDecl);
