@@ -39,7 +39,7 @@ namespace Liversen.DependencyCop.NamespaceCycle
             {
                 var sourceType = Helpers.DetermineEnclosingType(context);
                 var targetType = Helpers.DetermineReferredType(context);
-                if (sourceType != null && targetType != null && SameAssembly(sourceType, targetType))
+                if (sourceType != null && targetType != null && Helpers.TypesInSameAssembly(sourceType, targetType))
                 {
                     var sourceNamespace = Helpers.NamespaceFullName(sourceType);
                     var targetNamespace = Helpers.NamespaceFullName(targetType);
@@ -55,14 +55,6 @@ namespace Liversen.DependencyCop.NamespaceCycle
                     }
                 }
             }
-
-            static bool SameAssembly(ITypeSymbol left, ITypeSymbol right) =>
-                left.ContainingAssembly != null
-                && right.ContainingAssembly != null
-                && AssemblyIdentityComparer.Default.Compare(
-                    left.ContainingAssembly.Identity,
-                    right.ContainingAssembly.Identity)
-                == AssemblyIdentityComparer.ComparisonResult.Equivalent;
         }
     }
 }

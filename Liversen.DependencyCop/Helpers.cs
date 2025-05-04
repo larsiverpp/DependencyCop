@@ -42,5 +42,13 @@ namespace Liversen.DependencyCop
 
             return semanticModel.GetDeclaredSymbol(typeDeclarationSyntaxNode) as ITypeSymbol;
         }
+
+        public static bool TypesInSameAssembly(ITypeSymbol type1, ITypeSymbol type2) =>
+            type1.ContainingAssembly != null
+            && type2.ContainingAssembly != null
+            && AssemblyIdentityComparer.Default.Compare(
+                type1.ContainingAssembly.Identity,
+                type2.ContainingAssembly.Identity)
+            == AssemblyIdentityComparer.ComparisonResult.Equivalent;
     }
 }
