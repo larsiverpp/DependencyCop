@@ -19,6 +19,7 @@ namespace Liversen.DependencyCop
             {
                 return typeSymbol;
             }
+
             var symbolInfo = semanticModel.GetSymbolInfo(node);
             return symbolInfo.Symbol switch
             {
@@ -38,6 +39,7 @@ namespace Liversen.DependencyCop
             {
                 return null;
             }
+
             return semanticModel.GetDeclaredSymbol(typeDeclarationSyntaxNode) as ITypeSymbol;
         }
     }
