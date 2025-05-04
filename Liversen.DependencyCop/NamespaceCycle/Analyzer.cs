@@ -41,8 +41,8 @@ namespace Liversen.DependencyCop.NamespaceCycle
                 var targetType = Helpers.DetermineReferredType(context);
                 if (sourceType != null && targetType != null && Helpers.TypesInSameAssembly(sourceType, targetType))
                 {
-                    var sourceNamespace = Helpers.NamespaceFullName(sourceType);
-                    var targetNamespace = Helpers.NamespaceFullName(targetType);
+                    var sourceNamespace = Helpers.ContainingNamespace(sourceType);
+                    var targetNamespace = Helpers.ContainingNamespace(targetType);
                     var dependency = DottedName.TakeIncludingFirstDifferingPart(sourceNamespace, targetNamespace);
                     if (dependency != null)
                     {
