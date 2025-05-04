@@ -34,9 +34,9 @@ namespace Liversen.DependencyCop.DescendantNamespaceAccess
             var enclosingType = Helpers.DetermineEnclosingType(context);
             if (type != null && enclosingType != null)
             {
-                var typeNamespace = type.NamespaceFullName();
-                var enclosingNamespace = enclosingType.NamespaceFullName();
-                if (typeNamespace != null && enclosingNamespace != null && typeNamespace.StartsWith($"{enclosingNamespace}.", StringComparison.Ordinal))
+                var typeNamespace = Helpers.NamespaceFullName(type);
+                var enclosingNamespace = Helpers.NamespaceFullName(enclosingType);
+                if (typeNamespace.StartsWith($"{enclosingNamespace}.", StringComparison.Ordinal))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), type.Name, typeNamespace));
                 }
