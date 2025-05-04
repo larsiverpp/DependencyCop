@@ -66,6 +66,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 .Split(',')
                 .Select(s => s.Trim())
                 .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => new DottedName(x))
                 .ToImmutableArray();
             startContext.RegisterSyntaxNodeAction(c => AnalyseUsingStatement(c, disallowedNamespacePrefixes), SyntaxKind.UsingDirective);
             if (disallowedNamespacePrefixesValue == null)
@@ -74,17 +75,14 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             }
         }
 
-        static void AnalyseUsingStatement(SyntaxNodeAnalysisContext context, ImmutableArray<string> disallowedNamespacePrefixes)
+        static void AnalyseUsingStatement(SyntaxNodeAnalysisContext context, ImmutableArray<DottedName> disallowedNamespacePrefixes)
         {
             if (context.Node is UsingDirectiveSyntax node && string.IsNullOrEmpty(node.StaticKeyword.Text) && node.Name != null)
             {
-                var name = node.Name.ToFullString();
-                foreach (var disallowedNamespacePrefix in disallowedNamespacePrefixes)
+                var name = new DottedName(node.Name.ToFullString());
+                if (disallowedNamespacePrefixes.Any(x => name.IsEqualToOrDescendantOf(x)))
                 {
-                    if (name == disallowedNamespacePrefix || name.StartsWith($"{disallowedNamespacePrefix}.", StringComparison.Ordinal))
-                    {
-                        context.ReportDiagnostic(Diagnostic.Create(Descriptor, node.GetLocation(), name));
-                    }
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, node.GetLocation(), name));
                 }
             }
         }
