@@ -33,8 +33,8 @@ namespace Liversen.DependencyCop.DescendantNamespaceAccess
             var enclosingType = Helpers.DetermineEnclosingType(context);
             if (type != null && enclosingType != null)
             {
-                var typeNamespace = Helpers.NamespaceFullName(type);
-                var enclosingTypeNamespace = Helpers.NamespaceFullName(enclosingType);
+                var typeNamespace = Helpers.ContainingNamespace(type);
+                var enclosingTypeNamespace = Helpers.ContainingNamespace(enclosingType);
                 if (typeNamespace.IsDescendantOf(enclosingTypeNamespace))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), type.Name, typeNamespace.Value));
