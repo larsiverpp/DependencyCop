@@ -35,7 +35,7 @@ namespace Liversen.DependencyCop
             {
                 if (value1.Parts[i] != value2.Parts[i])
                 {
-                    return (value1.Take(i + 1), value2.Take(i + 1));
+                    return (value1.TakeParts(i + 1), value2.TakeParts(i + 1));
                 }
             }
 
@@ -54,17 +54,17 @@ namespace Liversen.DependencyCop
             {
                 if (other.Parts.Length <= i || other.Parts[i] != Parts[i])
                 {
-                    return Skip(i);
+                    return SkipParts(i);
                 }
             }
 
             return null;
         }
 
-        public DottedName Skip(int count) =>
+        public DottedName SkipParts(int count) =>
             Create(Parts.Skip(count));
 
-        public DottedName Take(int count) =>
+        public DottedName TakeParts(int count) =>
             Create(Parts.Take(count));
 
         public override string ToString() =>
