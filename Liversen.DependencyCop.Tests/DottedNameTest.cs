@@ -29,11 +29,11 @@ namespace Liversen.DependencyCop
 
         [Fact]
         public static void GivenDottedName_WhenSkippingSome_ThenDottedNameWithSkippedParts() =>
-            SomeValue.Skip(1).ShouldBe(DottedName.Create(SomeParts.Skip(1)));
+            SomeValue.SkipParts(1).ShouldBe(DottedName.Create(SomeParts.Skip(1)));
 
         [Fact]
         public static void GivenDottedName_WhenTakingSome_ThenDottedNameWithTakenParts() =>
-            SomeValue.Take(2).ShouldBe(DottedName.Create(SomeParts.Take(2)));
+            SomeValue.TakeParts(2).ShouldBe(DottedName.Create(SomeParts.Take(2)));
 
         [Fact]
         public static void GivenIdenticalDottedNames_WhenIsDescendantOf_ThenFalse() =>
