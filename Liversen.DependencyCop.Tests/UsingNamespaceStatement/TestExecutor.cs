@@ -31,6 +31,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         [InlineData("ExtensionMethod")]
         [InlineData("ExtensionMethodUsedTwice")]
         [InlineData("AlreadyFullyQualified")]
+        [InlineData("StaticUsingAlreadyExists")]
         async Task GivenCodeUsingDisallowedNamespace_WhenCodeFix_ThenExpectedResult(string testName, string? optionalExtraNamespace = null)
         {
             var code = EmbeddedResourceHelpers.GetFixProviderTestData(GetType(), $"{testName}Code");
