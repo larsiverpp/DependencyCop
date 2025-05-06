@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -34,6 +36,7 @@ namespace Liversen.DependencyCop.NamespaceCycle
         class Inner
         {
             readonly Dag dag = new Dag();
+            readonly Dictionary<string, Location> dependencyIdToLocation = new Dictionary<string, Location>();
 
             public void Analyse(SyntaxNodeAnalysisContext context)
             {
@@ -47,12 +50,44 @@ namespace Liversen.DependencyCop.NamespaceCycle
                     if (dependency != null)
                     {
                         var (source, target) = dependency.Value;
+                        dependencyIdToLocation.TryAdd(DependencyId(source, target), context.Node.GetLocation());
                         var cycle = dag.TryAddVertex(source.Value, target.Value);
                         if (cycle != null)
                         {
-                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), string.Join("->", cycle)));
+                            var normalizedCycle = NormalizeCycle(cycle.Value);
+                            var locations = Locations(normalizedCycle).ToImmutableArray();
+                            context.ReportDiagnostic(Diagnostic.Create(
+                                Descriptor,
+                                locations[0],
+                                locations.Skip(1),
+                                string.Join("->", normalizedCycle)));
                         }
                     }
+                }
+            }
+
+            static string DependencyId(DottedName source, DottedName target) =>
+                $"{source.Value}->{target.Value}";
+
+            static ImmutableArray<string> NormalizeCycle(ImmutableArray<string> cycle)
+            {
+                var cycleStart = cycle.OrderBy(x => x).First();
+                while (cycle[0] != cycleStart)
+                {
+                    cycle = cycle.Skip(1).Append(cycle[1]).ToImmutableArray();
+                }
+
+                return cycle;
+            }
+
+            IEnumerable<Location> Locations(ImmutableArray<string> cycle)
+            {
+                for (var i = 0; i < cycle.Length - 1; ++i)
+                {
+                    var source = new DottedName(cycle[i]);
+                    var target = new DottedName(cycle[i + 1]);
+                    var dependencyId = DependencyId(source, target);
+                    yield return dependencyIdToLocation[dependencyId];
                 }
             }
         }
