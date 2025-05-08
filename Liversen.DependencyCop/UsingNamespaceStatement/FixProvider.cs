@@ -19,26 +19,40 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
         public override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            if (!Csharp.IsNormalCsharpCode(context.Document))
+            var document = context.Document;
+
+            if (!SupportedDocument(document))
             {
                 return;
             }
 
-            var root = await Csharp.GetSyntaxRootAsync(context.Document, CancellationToken.None);
+            var rootNode = await document.GetSyntaxRootAsync(CancellationToken.None);
+            if (rootNode == null)
+            {
+                return;
+            }
 
             foreach (var diagnostic in context.Diagnostics)
             {
-                var syntaxNode = root.FindNode(diagnostic.Location.SourceSpan);
+                var syntaxNode = rootNode.FindNode(diagnostic.Location.SourceSpan);
                 if (syntaxNode is UsingDirectiveSyntax usingDirective)
                 {
                     context.RegisterCodeFix(
                         CodeAction.Create(
                             title: $"Qualify usages and remove this line ('using {usingDirective.Name};').",
-                            createChangedDocument: c => SingleFixAction.ApplyFixAsync(usingDirective, context.Document, c),
+                            createChangedDocument: c => SingleFixAction.ApplyFixAsync(document, usingDirective, c),
                             equivalenceKey: "QualifyAndRemoveUsing"),
                         diagnostic);
                 }
             }
         }
+
+        static bool SupportedDocument(Document document) =>
+            document is
+            {
+                SupportsSyntaxTree: true,
+                SupportsSemanticModel: true,
+                SourceCodeKind: SourceCodeKind.Regular
+            };
     }
 }

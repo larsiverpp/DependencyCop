@@ -28,11 +28,21 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             this.staticUsings = staticUsings;
         }
 
-        public static async Task<Document> ApplyFixAsync(UsingDirectiveSyntax usingDirective, Document document, CancellationToken cancellationToken)
+        public static async Task<Document> ApplyFixAsync(Document document, UsingDirectiveSyntax usingDirective, CancellationToken cancellationToken)
         {
-            var semanticModel = await Csharp.GetSemanticModelAsync(document, cancellationToken);
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            if (semanticModel == null)
+            {
+                return document;
+            }
+
             var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
-            var namespaceName = Csharp.UsingDirectiveName(usingDirective);
+            if (usingDirective.Name == null)
+            {
+                return document;
+            }
+
+            var namespaceName = usingDirective.Name.ToString();
             var staticUsings = await StaticUsingsSet.GetExisingStaticUsings(document);
 
             var fixAction = new SingleFixAction(semanticModel, editor, namespaceName, document, usingDirective, staticUsings);
@@ -54,12 +64,20 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         {
             var back = new List<ViolationInformation>();
 
-            var root = await Csharp.GetSyntaxRootAsync(document, cancellationToken);
+            var rootNode = await document.GetSyntaxRootAsync(cancellationToken);
+            if (rootNode == null)
+            {
+                return back;
+            }
 
-            var nameSpaceDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
+            var nameSpaceDeclarations = rootNode.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (var namespaceDeclarationSyntax in nameSpaceDeclarations)
             {
-                var declaredSymbol = Csharp.GetDeclaredSymbol(semanticModel, namespaceDeclarationSyntax);
+                var declaredSymbol = semanticModel.GetDeclaredSymbol(namespaceDeclarationSyntax);
+                if (declaredSymbol == null)
+                {
+                    continue;
+                }
 
                 var typeOuterNamespace = Helpers.ContainingNamespace(declaredSymbol).Value;
 
