@@ -46,21 +46,24 @@ namespace Liversen.DependencyCop.NamespaceCycle
                 {
                     var sourceNamespace = Helpers.ContainingNamespace(sourceType);
                     var targetNamespace = Helpers.ContainingNamespace(targetType);
-                    var dependency = DottedName.TakeIncludingFirstDifferingPart(sourceNamespace, targetNamespace);
-                    if (dependency != null)
+                    if (sourceNamespace != null && targetNamespace != null)
                     {
-                        var (source, target) = dependency.Value;
-                        dependencyIdToLocation.TryAdd(DependencyId(source, target), context.Node.GetLocation());
-                        var cycle = dag.TryAddVertex(source.Value, target.Value);
-                        if (cycle != null)
+                        var dependency = DottedName.TakeIncludingFirstDifferingPart(sourceNamespace, targetNamespace);
+                        if (dependency != null)
                         {
-                            var normalizedCycle = NormalizeCycle(cycle.Value);
-                            var locations = Locations(normalizedCycle).ToImmutableArray();
-                            context.ReportDiagnostic(Diagnostic.Create(
-                                Descriptor,
-                                locations[0],
-                                locations.Skip(1),
-                                string.Join("->", normalizedCycle)));
+                            var (source, target) = dependency.Value;
+                            dependencyIdToLocation.TryAdd(DependencyId(source, target), context.Node.GetLocation());
+                            var cycle = dag.TryAddVertex(source.Value, target.Value);
+                            if (cycle != null)
+                            {
+                                var normalizedCycle = NormalizeCycle(cycle.Value);
+                                var locations = Locations(normalizedCycle).ToImmutableArray();
+                                context.ReportDiagnostic(Diagnostic.Create(
+                                    Descriptor,
+                                    locations[0],
+                                    locations.Skip(1),
+                                    string.Join("->", normalizedCycle)));
+                            }
                         }
                     }
                 }

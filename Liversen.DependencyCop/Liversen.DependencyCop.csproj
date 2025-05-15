@@ -19,7 +19,7 @@
     <PackageTags>Roslyn;Analyzers;CodeAnalysis</PackageTags>
     <PackageProjectUrl>https://github.com/larsiverpp/DependencyCop</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)-beta.1</PackageVersion>
+    <PackageVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)-beta.2</PackageVersion>
     <RepositoryUrl>https://github.com/larsiverpp/DependencyCop.git </RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>

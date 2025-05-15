@@ -79,16 +79,16 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                     continue;
                 }
 
-                var typeOuterNamespace = Helpers.ContainingNamespace(declaredSymbol).Value;
+                var typeOuterNamespace = Helpers.ContainingNamespace(declaredSymbol);
 
-                if (typeOuterNamespace == namespaceName)
+                if (typeOuterNamespace == null || typeOuterNamespace.Value == namespaceName)
                 {
                     continue;
                 }
 
                 var typeDeclarations = namespaceDeclarationSyntax.DescendantNodes().OfType<SimpleNameSyntax>();
 
-                back.AddRange(FilterTypeDeclarationWithinSpecifiedNamespace(typeDeclarations, typeOuterNamespace));
+                back.AddRange(FilterTypeDeclarationWithinSpecifiedNamespace(typeDeclarations, typeOuterNamespace.Value));
             }
 
             return back;
