@@ -48,11 +48,6 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         }
 
         static bool SupportedDocument(Document document) =>
-            document is
-            {
-                SupportsSyntaxTree: true,
-                SupportsSemanticModel: true,
-                SourceCodeKind: SourceCodeKind.Regular
-            };
+            document.SupportsSyntaxTree && document.SupportsSemanticModel && document.SourceCodeKind == SourceCodeKind.Regular;
     }
 }

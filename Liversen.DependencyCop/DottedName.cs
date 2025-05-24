@@ -27,7 +27,7 @@ namespace Liversen.DependencyCop
         public ImmutableArray<string> Parts { get; }
 
         public static DottedName Create(IEnumerable<string> parts) =>
-            new DottedName(string.Join('.', parts));
+            new DottedName(string.Join(".", parts));
 
         public static (DottedName Value1, DottedName Value2)? TakeIncludingFirstDifferingPart(DottedName value1, DottedName value2)
         {
@@ -48,7 +48,7 @@ namespace Liversen.DependencyCop
         public bool IsEqualToOrDescendantOf(DottedName other) =>
             this == other || IsDescendantOf(other);
 
-        public DottedName? SkipCommonPrefix(DottedName other)
+        public DottedName SkipCommonPrefix(DottedName other)
         {
             for (var i = 0; i < Parts.Length; ++i)
             {

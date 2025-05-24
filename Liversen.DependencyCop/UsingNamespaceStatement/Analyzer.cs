@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -43,7 +42,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             context.RegisterCompilationStartAction(CompilationStart);
         }
 
-        static string? GetDisallowedNamespacePrefixesValue(AnalyzerOptions options)
+        static string GetDisallowedNamespacePrefixesValue(AnalyzerOptions options)
         {
             var optionsProvider = options.AnalyzerConfigOptionsProvider;
             if (optionsProvider.GlobalOptions.TryGetValue(DotnetDiagnosticOptionName, out var value1))

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
@@ -19,7 +19,7 @@
     <PackageTags>Roslyn;Analyzers;CodeAnalysis</PackageTags>
     <PackageProjectUrl>https://github.com/larsiverpp/DependencyCop</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)-beta.2</PackageVersion>
+    <PackageVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)-beta.3</PackageVersion>
     <RepositoryUrl>https://github.com/larsiverpp/DependencyCop.git </RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>

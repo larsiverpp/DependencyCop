@@ -52,9 +52,14 @@ namespace Liversen.DependencyCop.NamespaceCycle
                         if (dependency != null)
                         {
                             var (source, target) = dependency.Value;
-                            dependencyIdToLocation.TryAdd(DependencyId(source, target), context.Node.GetLocation());
+                            var dependencyId = DependencyId(source, target);
+                            if (!dependencyIdToLocation.ContainsKey(dependencyId))
+                            {
+                                dependencyIdToLocation.Add(dependencyId, context.Node.GetLocation());
+                            }
+
                             var cycle = dag.TryAddVertex(source.Value, target.Value);
-                            if (cycle != null)
+                            if (cycle != null && cycle.HasValue)
                             {
                                 var normalizedCycle = NormalizeCycle(cycle.Value);
                                 var locations = Locations(normalizedCycle).ToImmutableArray();
