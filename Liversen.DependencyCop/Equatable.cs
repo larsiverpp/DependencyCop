@@ -7,7 +7,7 @@ namespace Liversen.DependencyCop
     public abstract class Equatable<TValue> : IEquatable<TValue>
         where TValue : Equatable<TValue>
     {
-        public static bool operator ==(Equatable<TValue>? left, Equatable<TValue>? right)
+        public static bool operator ==(Equatable<TValue> left, Equatable<TValue> right)
         {
             if (left is null)
             {
@@ -17,10 +17,10 @@ namespace Liversen.DependencyCop
             return left.Equals(right);
         }
 
-        public static bool operator !=(Equatable<TValue>? left, Equatable<TValue>? right) =>
+        public static bool operator !=(Equatable<TValue> left, Equatable<TValue> right) =>
             !(left == right);
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -35,7 +35,7 @@ namespace Liversen.DependencyCop
             return Equals((TValue)obj);
         }
 
-        public bool Equals(TValue? other)
+        public bool Equals(TValue other)
         {
             if (ReferenceEquals(null, other))
             {

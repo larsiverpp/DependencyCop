@@ -7,12 +7,12 @@ namespace Liversen.DependencyCop
 {
     static class Helpers
     {
-        public static DottedName? ContainingNamespace(ISymbol typeSymbol) =>
+        public static DottedName ContainingNamespace(ISymbol typeSymbol) =>
             typeSymbol.ContainingNamespace != null
                 ? new DottedName(typeSymbol.ContainingNamespace.ToString())
                 : null;
 
-        public static ITypeSymbol? DetermineReferredType(SyntaxNodeAnalysisContext context)
+        public static ITypeSymbol DetermineReferredType(SyntaxNodeAnalysisContext context)
         {
             var node = context.Node;
             var semanticModel = context.SemanticModel;
@@ -23,15 +23,18 @@ namespace Liversen.DependencyCop
             }
 
             var symbolInfo = semanticModel.GetSymbolInfo(node);
-            return symbolInfo.Symbol switch
+            switch (symbolInfo.Symbol)
             {
-                ITypeSymbol symbolInfoTypeSymbol => symbolInfoTypeSymbol,
-                IMethodSymbol methodSymbol => methodSymbol.ReturnType,
-                _ => null
-            };
+                case ITypeSymbol symbolInfoTypeSymbol:
+                    return symbolInfoTypeSymbol;
+                case IMethodSymbol methodSymbol:
+                    return methodSymbol.ReturnType;
+                default:
+                    return null;
+            }
         }
 
-        public static ITypeSymbol? DetermineEnclosingType(SyntaxNodeAnalysisContext context)
+        public static ITypeSymbol DetermineEnclosingType(SyntaxNodeAnalysisContext context)
         {
             var node = context.Node;
             var semanticModel = context.SemanticModel;

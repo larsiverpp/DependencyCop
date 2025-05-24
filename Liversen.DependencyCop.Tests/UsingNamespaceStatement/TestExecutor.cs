@@ -32,7 +32,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         [InlineData("ExtensionMethodUsedTwice")]
         [InlineData("AlreadyFullyQualified")]
         [InlineData("StaticUsingAlreadyExists")]
-        async Task GivenCodeUsingDisallowedNamespace_WhenCodeFix_ThenExpectedResult(string testName, string? optionalExtraNamespace = null)
+        async Task GivenCodeUsingDisallowedNamespace_WhenCodeFix_ThenExpectedResult(string testName, string optionalExtraNamespace = null)
         {
             var code = EmbeddedResourceHelpers.GetFixProviderTestData(GetType(), $"{testName}Code");
             var expectedCode = EmbeddedResourceHelpers.GetFixProviderTestData(GetType(), $"{testName}FixedCode");
@@ -40,7 +40,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 .WithLocation(1, 1)
                 .WithMessage($"Do not use 'UsingNamespaceStatementAnalyzer.Account{optionalExtraNamespace}' in a using statement, use fully-qualified names");
 
-            CSharpCodeFixTest<Analyzer, FixProvider, DefaultVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, DefaultVerifier>()
+            CSharpCodeFixTest<Analyzer, FixProvider, DefaultVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, DefaultVerifier>
             {
                 TestState =
                 {
@@ -73,7 +73,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 .WithLocation(2, 1)
                 .WithMessage("Do not use 'UsingNamespaceStatementAnalyzer.Customer' in a using statement, use fully-qualified names");
 
-            CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier>()
+            CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier>
             {
                 TestState =
                 {
