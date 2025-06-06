@@ -121,10 +121,14 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 {
                     var fullNameSpace = symbol.ToDisplayString();
 
-                    // This indicates that it is an extension method.
-                    if (classDecl.ViolatingNode.Parent is MemberAccessExpressionSyntax)
+                    var possibleMethodCall = classDecl.ViolatingNode.Parent;
+                    if (possibleMethodCall is MemberAccessExpressionSyntax)
                     {
-                        FixForExtensionMethod(symbol);
+                        if (semanticModel.GetSymbolInfo(possibleMethodCall).Symbol is IMethodSymbol possibleExtensionMethod
+                            && possibleExtensionMethod.IsExtensionMethod)
+                        {
+                            FixForExtensionMethod(symbol);
+                        }
                     }
                     else
                     {

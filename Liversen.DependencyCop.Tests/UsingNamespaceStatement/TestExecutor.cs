@@ -25,6 +25,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         [InlineData("DoubleTest")]
         [InlineData("SubSpaceTest", ".SubSpace")]
         [InlineData("MethodReturn")]
+        [InlineData("MemberMethodCall")]
         [InlineData("MethodParameter")]
         [InlineData("MethodParameterWithAttribute")]
         [InlineData("AsyncMethodReturn")]
