@@ -4,13 +4,13 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 {
     public class ViolationInformation
     {
-        public ViolationInformation(string @namespace, TypeSyntax violatingNode)
+        public ViolationInformation(DottedName @namespace, TypeSyntax violatingNode)
         {
             NameSpace = @namespace;
             ViolatingNode = violatingNode;
         }
 
-        public string NameSpace { get; }
+        public DottedName NameSpace { get; }
 
         public TypeSyntax ViolatingNode { get; }
     }

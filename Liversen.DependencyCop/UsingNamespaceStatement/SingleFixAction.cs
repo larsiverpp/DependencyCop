@@ -13,12 +13,12 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
     {
         readonly SemanticModel semanticModel;
         readonly DocumentEditor editor;
-        readonly string namespaceName;
+        readonly DottedName namespaceName;
         readonly Document document;
         readonly UsingDirectiveSyntax usingDirective;
         readonly StaticUsingsSet staticUsings;
 
-        SingleFixAction(SemanticModel semanticModel, DocumentEditor editor, string namespaceName, Document document, UsingDirectiveSyntax usingDirective, StaticUsingsSet staticUsings)
+        SingleFixAction(SemanticModel semanticModel, DocumentEditor editor, DottedName namespaceName, Document document, UsingDirectiveSyntax usingDirective, StaticUsingsSet staticUsings)
         {
             this.semanticModel = semanticModel;
             this.editor = editor;
@@ -42,7 +42,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 return document;
             }
 
-            var namespaceName = usingDirective.Name.ToString();
+            var namespaceName = new DottedName(usingDirective.Name.ToString());
             var staticUsings = await StaticUsingsSet.GetExisingStaticUsings(document);
 
             var fixAction = new SingleFixAction(semanticModel, editor, namespaceName, document, usingDirective, staticUsings);
@@ -80,31 +80,30 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 }
 
                 var typeOuterNamespace = Helpers.ContainingNamespace(declaredSymbol);
-
-                if (typeOuterNamespace == null || typeOuterNamespace.Value == namespaceName)
+                if (typeOuterNamespace == null || typeOuterNamespace == namespaceName)
                 {
                     continue;
                 }
 
                 var typeDeclarations = namespaceDeclarationSyntax.DescendantNodes().OfType<SimpleNameSyntax>();
 
-                back.AddRange(FilterTypeDeclarationWithinSpecifiedNamespace(typeDeclarations, typeOuterNamespace.Value));
+                back.AddRange(FilterTypeDeclarationWithinSpecifiedNamespace(typeDeclarations, typeOuterNamespace));
             }
 
             return back;
         }
 
-        IEnumerable<ViolationInformation> FilterTypeDeclarationWithinSpecifiedNamespace(IEnumerable<SimpleNameSyntax> typeDeclarations, string typeOuterNamespace)
+        IEnumerable<ViolationInformation> FilterTypeDeclarationWithinSpecifiedNamespace(IEnumerable<SimpleNameSyntax> typeDeclarations, DottedName typeOuterNamespace)
         {
-            foreach (var typeDecl in typeDeclarations)
+            if (typeOuterNamespace != namespaceName)
             {
-                var declarationInNamespace = typeOuterNamespace;
-                if (declarationInNamespace != namespaceName)
+                foreach (var typeDecl in typeDeclarations)
                 {
-                    var containingNamespace = semanticModel.GetSymbolInfo(typeDecl).Symbol?.ContainingNamespace.ToString();
-                    if (containingNamespace != null && containingNamespace == namespaceName)
+                    var symbol = semanticModel.GetSymbolInfo(typeDecl).Symbol;
+                    var symbolContainingNamespace = Helpers.ContainingNamespace(symbol);
+                    if (symbolContainingNamespace == namespaceName)
                     {
-                        yield return new ViolationInformation(declarationInNamespace, typeDecl);
+                        yield return new ViolationInformation(typeOuterNamespace, typeDecl);
                     }
                 }
             }
@@ -117,7 +116,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 var symbolInfo = semanticModel.GetSymbolInfo(classDecl.ViolatingNode, cancellationToken);
                 var symbol = symbolInfo.Symbol;
                 if (symbol?.ContainingNamespace != null &&
-                    symbol.ContainingNamespace.ToDisplayString() == namespaceName)
+                    symbol.ContainingNamespace.ToDisplayString() == namespaceName.Value)
                 {
                     var fullNameSpace = symbol.ToDisplayString();
 
@@ -140,7 +139,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
         void QualifyUsageOfType(string fullNameSpace, ViolationInformation classDecl)
         {
-            var replace = new DottedName(fullNameSpace).SkipCommonPrefix(new DottedName(classDecl.NameSpace));
+            var replace = new DottedName(fullNameSpace).SkipCommonPrefix(classDecl.NameSpace);
             if (replace != null)
             {
                 var qualifiedName = SyntaxFactory.ParseName(replace.Value)
