@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Editing;
 
 namespace Liversen.DependencyCop.UsingNamespaceStatement
 {
-    class SingleFixAction
+    class Fixer
     {
         readonly SemanticModel semanticModel;
         readonly DocumentEditor editor;
@@ -18,7 +18,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
         readonly UsingDirectiveSyntax usingDirective;
         readonly StaticUsingsSet staticUsings;
 
-        SingleFixAction(SemanticModel semanticModel, DocumentEditor editor, DottedName namespaceName, Document document, UsingDirectiveSyntax usingDirective, StaticUsingsSet staticUsings)
+        Fixer(SemanticModel semanticModel, DocumentEditor editor, DottedName namespaceName, Document document, UsingDirectiveSyntax usingDirective, StaticUsingsSet staticUsings)
         {
             this.semanticModel = semanticModel;
             this.editor = editor;
@@ -28,7 +28,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             this.staticUsings = staticUsings;
         }
 
-        public static async Task<Document> ApplyFixAsync(Document document, UsingDirectiveSyntax usingDirective, CancellationToken cancellationToken)
+        public static async Task<Document> ApplyFix(Document document, UsingDirectiveSyntax usingDirective, CancellationToken cancellationToken)
         {
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
             if (semanticModel == null)
@@ -45,14 +45,14 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var namespaceName = new DottedName(usingDirective.Name.ToString());
             var staticUsings = await StaticUsingsSet.GetExisingStaticUsings(document);
 
-            var fixAction = new SingleFixAction(semanticModel, editor, namespaceName, document, usingDirective, staticUsings);
+            var fixAction = new Fixer(semanticModel, editor, namespaceName, document, usingDirective, staticUsings);
 
             return await fixAction.ApplyFix(cancellationToken);
         }
 
         async Task<Document> ApplyFix(CancellationToken cancellationToken)
         {
-            var classDeclarations = await FindNameSpaceUsagesAsync(cancellationToken);
+            var classDeclarations = await FindNameSpaceUsages(cancellationToken);
             FixNameSpaceUsages(classDeclarations, cancellationToken);
 
             editor.RemoveNode(usingDirective);
@@ -60,9 +60,9 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             return editor.GetChangedDocument();
         }
 
-        async Task<List<ViolationInformation>> FindNameSpaceUsagesAsync(CancellationToken cancellationToken)
+        async Task<List<Violation>> FindNameSpaceUsages(CancellationToken cancellationToken)
         {
-            var back = new List<ViolationInformation>();
+            var back = new List<Violation>();
 
             var rootNode = await document.GetSyntaxRootAsync(cancellationToken);
             if (rootNode == null)
@@ -93,7 +93,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             return back;
         }
 
-        IEnumerable<ViolationInformation> FilterTypeDeclarationWithinSpecifiedNamespace(IEnumerable<SimpleNameSyntax> typeDeclarations, DottedName typeOuterNamespace)
+        IEnumerable<Violation> FilterTypeDeclarationWithinSpecifiedNamespace(IEnumerable<SimpleNameSyntax> typeDeclarations, DottedName typeOuterNamespace)
         {
             if (typeOuterNamespace != namespaceName)
             {
@@ -103,13 +103,13 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                     var symbolContainingNamespace = Helpers.ContainingNamespace(symbol);
                     if (symbolContainingNamespace == namespaceName)
                     {
-                        yield return new ViolationInformation(typeOuterNamespace, typeDecl);
+                        yield return new Violation(typeOuterNamespace, typeDecl);
                     }
                 }
             }
         }
 
-        void FixNameSpaceUsages(IReadOnlyList<ViolationInformation> classDeclarations, CancellationToken cancellationToken)
+        void FixNameSpaceUsages(IReadOnlyList<Violation> classDeclarations, CancellationToken cancellationToken)
         {
             foreach (var classDecl in classDeclarations)
             {
@@ -137,7 +137,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             }
         }
 
-        void QualifyUsageOfType(string fullNameSpace, ViolationInformation classDecl)
+        void QualifyUsageOfType(string fullNameSpace, Violation classDecl)
         {
             var replace = new DottedName(fullNameSpace).SkipCommonPrefix(classDecl.NameSpace);
             if (replace != null)
@@ -177,6 +177,19 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             {
                 editor.InsertBefore(usingDirective, staticUsing);
             }
+        }
+
+        sealed class Violation
+        {
+            public Violation(DottedName @namespace, TypeSyntax violatingNode)
+            {
+                NameSpace = @namespace;
+                ViolatingNode = violatingNode;
+            }
+
+            public DottedName NameSpace { get; }
+
+            public TypeSyntax ViolatingNode { get; }
         }
     }
 }
