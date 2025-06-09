@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -10,10 +11,10 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
     {
         readonly List<SyntaxNode> innerList = new List<SyntaxNode>();
 
-        public static async Task<StaticUsingsSet> GetExisingStaticUsings(Document document)
+        public static async Task<StaticUsingsSet> GetExisingStaticUsings(Document document, CancellationToken cancellationToken)
         {
             var nodeSet = new StaticUsingsSet();
-            var root = await document.GetSyntaxRootAsync();
+            var root = await document.GetSyntaxRootAsync(cancellationToken);
             if (root == null)
             {
                 return nodeSet;

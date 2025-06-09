@@ -43,7 +43,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             }
 
             var namespaceName = new DottedName(usingDirective.Name.ToString());
-            var staticUsings = await StaticUsingsSet.GetExisingStaticUsings(document);
+            var staticUsings = await StaticUsingsSet.GetExisingStaticUsings(document, cancellationToken);
 
             var fixAction = new Fixer(semanticModel, editor, namespaceName, document, usingDirective, staticUsings);
 
@@ -73,7 +73,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var nameSpaceDeclarations = rootNode.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (var namespaceDeclarationSyntax in nameSpaceDeclarations)
             {
-                var declaredSymbol = semanticModel.GetDeclaredSymbol(namespaceDeclarationSyntax);
+                var declaredSymbol = semanticModel.GetDeclaredSymbol(namespaceDeclarationSyntax, cancellationToken);
                 if (declaredSymbol == null)
                 {
                     continue;
@@ -87,19 +87,19 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
                 var typeDeclarations = namespaceDeclarationSyntax.DescendantNodes().OfType<SimpleNameSyntax>();
 
-                back.AddRange(FilterTypeDeclarationWithinSpecifiedNamespace(typeDeclarations, typeOuterNamespace));
+                back.AddRange(FilterTypeDeclarationWithinSpecifiedNamespace(typeDeclarations, typeOuterNamespace, cancellationToken));
             }
 
             return back;
         }
 
-        IEnumerable<Violation> FilterTypeDeclarationWithinSpecifiedNamespace(IEnumerable<SimpleNameSyntax> typeDeclarations, DottedName typeOuterNamespace)
+        IEnumerable<Violation> FilterTypeDeclarationWithinSpecifiedNamespace(IEnumerable<SimpleNameSyntax> typeDeclarations, DottedName typeOuterNamespace, CancellationToken cancellationToken)
         {
             if (typeOuterNamespace != namespaceName)
             {
                 foreach (var typeDecl in typeDeclarations)
                 {
-                    var symbol = semanticModel.GetSymbolInfo(typeDecl).Symbol;
+                    var symbol = semanticModel.GetSymbolInfo(typeDecl, cancellationToken).Symbol;
                     var symbolContainingNamespace = Helpers.ContainingNamespace(symbol);
                     if (symbolContainingNamespace == namespaceName)
                     {
@@ -123,7 +123,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                     var possibleMethodCall = classDecl.ViolatingNode.Parent;
                     if (possibleMethodCall is MemberAccessExpressionSyntax)
                     {
-                        if (semanticModel.GetSymbolInfo(possibleMethodCall).Symbol is IMethodSymbol possibleExtensionMethod
+                        if (semanticModel.GetSymbolInfo(possibleMethodCall, cancellationToken).Symbol is IMethodSymbol possibleExtensionMethod
                             && possibleExtensionMethod.IsExtensionMethod)
                         {
                             FixForExtensionMethod(symbol);
