@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
-using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Shouldly;
 using Xunit;
-#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Liversen.DependencyCop.UsingNamespaceStatement
 {
@@ -26,7 +24,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var expected = new DiagnosticResult("DC1001", DiagnosticSeverity.Warning)
                 .WithLocation(1, 1)
                 .WithMessage("Do not use 'UsingNamespaceStatementAnalyzer.Account' in a using statement, use fully-qualified names");
-            var test = new CSharpAnalyzerTest<Analyzer, XUnitVerifier>
+            var test = new CSharpAnalyzerTest<Analyzer, DefaultVerifier>
             {
                 TestState =
                 {
@@ -45,7 +43,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var code = EmbeddedResourceHelpers.GetAnalyzerTestData(GetType(), "Default");
             var expected = new DiagnosticResult("DC1004", DiagnosticSeverity.Warning)
                 .WithMessage("A list of disallowed namespaces must be configured for rule DC1001");
-            var test = new CSharpAnalyzerTest<Analyzer, XUnitVerifier>
+            var test = new CSharpAnalyzerTest<Analyzer, DefaultVerifier>
             {
                 TestState =
                 {

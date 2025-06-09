@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
-using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Shouldly;
 using Xunit;
-#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Liversen.DependencyCop.UsingNamespaceStatement
 {
@@ -74,7 +72,7 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                 .WithLocation(2, 1)
                 .WithMessage("Do not use 'UsingNamespaceStatementAnalyzer.Customer' in a using statement, use fully-qualified names");
 
-            CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, XUnitVerifier>
+            CSharpCodeFixTest<Analyzer, FixProvider, DefaultVerifier> test = new CSharpCodeFixTest<Analyzer, FixProvider, DefaultVerifier>
             {
                 TestState =
                 {
