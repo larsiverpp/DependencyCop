@@ -70,15 +70,14 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
 
         async Task<IEnumerable<Violation>> FindViolations(CancellationToken cancellationToken)
         {
-            var violations = new List<Violation>();
-
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
-            if (root == null)
+            var rootNode = await document.GetSyntaxRootAsync(cancellationToken);
+            if (rootNode == null)
             {
-                return violations;
+                return Enumerable.Empty<Violation>();
             }
 
-            var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
+            var violations = new List<Violation>();
+            var classDeclarations = rootNode.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (var classDeclaration in classDeclarations)
             {
                 var declaredSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, cancellationToken);
