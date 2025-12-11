@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk" DefaultTargets="_Build;_Test">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <SolutionFile>$(MSBuildProjectDirectory)\..\Liversen.DependencyCop.sln</SolutionFile>
+    <SolutionFile>$(MSBuildProjectDirectory)\..\Liversen.DependencyCop.slnx</SolutionFile>
     <SolutionDir>$(MSBuildProjectDirectory)\..</SolutionDir>
   </PropertyGroup>
   <ItemGroup>
@@ -13,7 +13,7 @@
     </PropertyGroup>
     <MakeDir Directories="$(ArtifactDirectory)"/>
     <MSBuild Projects="$(SolutionFile)" Targets="build;publish" Properties="Configuration=$(Configuration);NoRestore=true" BuildInParallel="true"/>
-    <!-- To force MSBuild to generate target PublishArtifacts in .sln.metaproj file, a dummy property must be specified. -->
+    <!-- To force MSBuild to generate target PublishArtifacts in .slnx.metaproj file, a dummy property must be specified. -->
     <MSBuild Projects="$(SolutionFile)" Targets="PublishArtifacts" Properties="Configuration=$(Configuration);ArtifactDirectory=$(ArtifactDirectory);DummyProperty=dummyValue" BuildInParallel="true"/>
   </Target>
   <Target Name="_Test">
