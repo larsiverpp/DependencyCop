@@ -8,15 +8,17 @@
     <Compile Remove="DescendantNamespaceAccess\TestData\Analyzer\*.cs" />
     <Compile Remove="NamespaceCycle\TestData\Analyzer\*.cs" />
     <Compile Remove="UsingNamespaceStatement\TestData\Analyzer\*.cs" />
+    <Compile Remove="UsingNamespaceStatement\TestData\FixProvider\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DescendantNamespaceAccess\TestData\Analyzer\*.cs" />
     <EmbeddedResource Include="NamespaceCycle\TestData\Analyzer\*.cs" />
     <EmbeddedResource Include="UsingNamespaceStatement\TestData\Analyzer\*.cs" />
+    <EmbeddedResource Include="UsingNamespaceStatement\TestData\FixProvider\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" Version="1.1.2" />
-    <PackageReference Include="System.Formats.Asn1" Version="9.0.11" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Liversen.DependencyCop\Liversen.DependencyCop.csproj" />

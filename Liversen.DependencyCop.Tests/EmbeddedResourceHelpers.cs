@@ -11,6 +11,11 @@ namespace Liversen.DependencyCop
             return GetFromCallingAssembly($"{testClass.Namespace}.TestData.Analyzer.{baseName}.cs");
         }
 
+        public static string GetFixProviderTestData(Type testClass, string baseName)
+        {
+            return GetFromCallingAssembly($"{testClass.Namespace}.TestData.FixProvider.{baseName}.cs");
+        }
+
         static string GetFromCallingAssembly(string resourceName)
         {
             return Get(Assembly.GetCallingAssembly(), resourceName);
