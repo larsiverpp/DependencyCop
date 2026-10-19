@@ -1,40 +1,39 @@
-<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="_Build;_Test">
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="Base.props" />
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <SolutionFile>$(MSBuildProjectDirectory)\..\Liversen.DependencyCop.slnx</SolutionFile>
     <SolutionDir>$(MSBuildProjectDirectory)\..</SolutionDir>
+    <SolutionFile Condition="'$(SolutionFile)' == ''">$(SolutionDir)\$(SolutionName).slnx</SolutionFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ReportGenerator" Version="5.5.11"/>
+    <PackageReference Include="ReportGenerator" Version="5.5.11" />
   </ItemGroup>
-  <Target Name="_Build" DependsOnTargets="_Restore">
-    <PropertyGroup>
-      <ArtifactDirectory>$(MSBuildProjectDirectory)\obj\Artifacts</ArtifactDirectory>
-    </PropertyGroup>
-    <MakeDir Directories="$(ArtifactDirectory)"/>
-    <MSBuild Projects="$(SolutionFile)" Targets="build;publish" Properties="Configuration=$(Configuration);NoRestore=true" BuildInParallel="true"/>
-    <!-- To force MSBuild to generate target PublishArtifacts in .slnx.metaproj file, a dummy property must be specified. -->
-    <MSBuild Projects="$(SolutionFile)" Targets="PublishArtifacts" Properties="Configuration=$(Configuration);ArtifactDirectory=$(ArtifactDirectory);DummyProperty=dummyValue" BuildInParallel="true"/>
+  <Target Name="_Restore">
+    <MSBuild Projects="$(SolutionFile);$(MSBuildThisFileFullPath)" Targets="restore" BuildInParallel="true" />
+  </Target>
+  <Target Name="_Build">
+    <MakeDir Directories="$(ArtifactDirectory)" />
+    <MSBuild Projects="$(SolutionFile)" Targets="build;publish" Properties="Configuration=$(Configuration);NoRestore=true" BuildInParallel="true" />
+    <CallTarget Targets="CopyDeploymentFiles" />
   </Target>
   <Target Name="_Test">
     <PropertyGroup>
       <TestResultsDirectory>$(MSBuildProjectDirectory)\obj\TestResults</TestResultsDirectory>
       <TestReportDirectory>$(MSBuildProjectDirectory)\obj\TestReport</TestReportDirectory>
-      <TestCoverageArguments>--collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover</TestCoverageArguments>
+      <TestArguments Condition="'$(RunAllTests)' == 'true'">$(TestArguments) -p:RunAllTests=true</TestArguments>
     </PropertyGroup>
-    <RemoveDir Directories="$(TestResultsDirectory);$(TestReportDirectory)"/>
-    <Exec Command='dotnet test $(SolutionFile) -c $(Configuration) --no-restore --no-build --logger "trx" --results-directory $(TestResultsDirectory) $(TestCoverageArguments)'/>
+    <RemoveDir Directories="$(TestResultsDirectory);$(TestReportDirectory)" />
+    <Exec Command="dotnet test $(SolutionFile) -c $(Configuration) --no-restore --no-build --results-directory $(TestResultsDirectory) $(TestArguments) -- --report-trx --coverage --coverage-output-format cobertura" />
     <ItemGroup>
-      <CoverageFile Include="$(SolutionDir)\**\obj\TestResults\*\coverage.cobertura.xml"/>
-      <CoverageFile Include="$(SolutionDir)\**\obj\TestResults\*\coverage.opencover.xml"/>
+      <CoverageFile Include="$(TestResultsDirectory)\*.cobertura.xml" />
+      <CoverageReport Include="Cobertura;MarkdownAssembliesSummary" />
+      <CoverageReport Condition="'$(IncludeTestCoverage)' == 'true'" Include="Html" />
     </ItemGroup>
-    <ReportGenerator ReportFiles="@(CoverageFile)" TargetDirectory="$(TestReportDirectory)" ReportTypes="Html;Cobertura"/>
+    <ReportGenerator ReportFiles="@(CoverageFile)" TargetDirectory="$(TestReportDirectory)" ReportTypes="@(CoverageReport)" />
   </Target>
-  <Target Name="_Clean" DependsOnTargets="_Restore">
-    <RemoveDir Directories="$(MSBuildProjectDirectory)\bin;$(MSBuildProjectDirectory)\obj" ContinueOnError="true"/>
-    <MSBuild Projects="$(SolutionFile)" Targets="clean" Properties="Configuration=$(Configuration);CleanBinObj=true;NoRestore=true" BuildInParallel="true" ContinueOnError="true"/>
+  <Target Name="_Clean">
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\bin;$(MSBuildProjectDirectory)\obj" ContinueOnError="true" />
+    <MSBuild Projects="$(SolutionFile)" Targets="clean" Properties="Configuration=$(Configuration);CleanBinObj=true;NoRestore=true" BuildInParallel="true" ContinueOnError="true" />
   </Target>
-  <Target Name="_Restore">
-    <MSBuild Projects="$(SolutionFile)" Targets="restore" Properties="Configuration=$(Configuration)" BuildInParallel="true"/>
-  </Target>
+  <Import Project="Base.targets" />
 </Project>

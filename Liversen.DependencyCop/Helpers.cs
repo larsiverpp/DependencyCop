@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -16,13 +17,13 @@ namespace Liversen.DependencyCop
         {
             var node = context.Node;
             var semanticModel = context.SemanticModel;
-            var typeSymbol = semanticModel.GetTypeInfo(node).Type;
+            var typeSymbol = semanticModel.GetTypeInfo(node, context.CancellationToken).Type;
             if (typeSymbol != null)
             {
                 return typeSymbol;
             }
 
-            var symbolInfo = semanticModel.GetSymbolInfo(node);
+            var symbolInfo = semanticModel.GetSymbolInfo(node, context.CancellationToken);
             switch (symbolInfo.Symbol)
             {
                 case ITypeSymbol symbolInfoTypeSymbol:
@@ -45,7 +46,7 @@ namespace Liversen.DependencyCop
                 return null;
             }
 
-            return semanticModel.GetDeclaredSymbol(typeDeclarationSyntaxNode) as ITypeSymbol;
+            return semanticModel.GetDeclaredSymbol(typeDeclarationSyntaxNode, context.CancellationToken) as ITypeSymbol;
         }
 
         public static bool TypesInSameAssembly(ITypeSymbol type1, ITypeSymbol type2) =>
