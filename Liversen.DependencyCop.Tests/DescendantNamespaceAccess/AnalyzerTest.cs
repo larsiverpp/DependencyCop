@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Shouldly;
 using Xunit;
 using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Liversen.DependencyCop.DescendantNamespaceAccess.Analyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
@@ -14,7 +15,7 @@ namespace Liversen.DependencyCop.DescendantNamespaceAccess
                 .WithLocation(5, 62)
                 .WithMessage("Do not use type 'Info' from descendant namespace 'DescendantNamespaceAccessAnalyzer.Bank.Account'");
 
-            await Verify.VerifyAnalyzerAsync(code, expected);
+            await Should.NotThrowAsync(() => TestRunner.Run<Analyzer>(code, expected, TestContext.Current.CancellationToken));
         }
     }
 }
