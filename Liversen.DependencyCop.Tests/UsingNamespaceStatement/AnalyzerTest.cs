@@ -31,7 +31,8 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
                     Sources = { code },
                     ExpectedDiagnostics = { expected },
                     AnalyzerConfigFiles = { GlobalConfig(globalConfigPropertyNamePrefix) }
-                }
+                },
+                ReferenceAssemblies = ReferenceAssemblies.Net.Net80
             };
 
             await Should.NotThrowAsync(() => test.RunAsync());
@@ -43,16 +44,8 @@ namespace Liversen.DependencyCop.UsingNamespaceStatement
             var code = EmbeddedResourceHelpers.GetAnalyzerTestData(GetType(), "Default");
             var expected = new DiagnosticResult("DC1004", DiagnosticSeverity.Warning)
                 .WithMessage("A list of disallowed namespaces must be configured for rule DC1001");
-            var test = new CSharpAnalyzerTest<Analyzer, DefaultVerifier>
-            {
-                TestState =
-                {
-                    Sources = { code },
-                    ExpectedDiagnostics = { expected }
-                }
-            };
 
-            await Should.NotThrowAsync(() => test.RunAsync());
+            await Should.NotThrowAsync(() => TestRunner.Run<Analyzer>(code, expected, TestContext.Current.CancellationToken));
         }
     }
 }
