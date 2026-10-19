@@ -20,4 +20,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Liversen.DependencyCop\Liversen.DependencyCop.csproj" />
   </ItemGroup>
+  <Import Project="..\_Development\TestProject.targets" />
 </Project>

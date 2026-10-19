@@ -1,0 +1,20 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="CopyDeploymentFiles" Inputs="@(DeploymentFile)" Outputs="%(DeploymentFile.Identity).nosuchfile">
+    <PropertyGroup>
+      <DeploymentFile>%(DeploymentFile.Identity)</DeploymentFile>
+    </PropertyGroup>
+    <WriteLinesToFile
+      File="%(DeploymentFile.DestinationFolder)\%(DeploymentFile.Filename)%(DeploymentFile.Extension)"
+      Lines="$([System.IO.File]::ReadAllText($(DeploymentFile)).Replace('${SemanticVersion}','$(SemanticVersion)'))"
+      Overwrite="true"/>
+  </Target>
+  <Target Name="CleanAll" AfterTargets="AfterClean">
+    <RemoveDir Condition="'$(CleanBinObj)' == 'true'" Directories="$(BaseIntermediateOutputPath);$(BaseOutputPath)"/>
+  </Target>
+  <Target Name="CopyPackage">
+    <Copy Condition="'$(GeneratePackageOnBuild)' == 'true'" SourceFiles="$(PackageOutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ArtifactDirectory)"/>
+  </Target>
+  <Target Name="ZipPublishedOutput">
+    <ZipDirectory Condition="'$(IsPublishable)' == 'true'" SourceDirectory="$(PublishDir)" DestinationFile="$(ArtifactDirectory)\$(TargetName).zip" Overwrite="true"/>
+  </Target>
+</Project>
